@@ -142,7 +142,7 @@
 </ol>
 <h2 id="AST-explorer查看代码"><a href="#AST-explorer查看代码" class="headerlink" title="AST explorer查看代码"></a>AST explorer查看代码</h2><p>首先打开<a href="https://astexplorer.net/，直接在代码里填入`1`，查看基本效果" target="_blank" rel="noopener">https://astexplorer.net/，直接在代码里填入`1`，查看基本效果</a>.<br><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/1.png" alt="图1"></p>
 <p>我们要做的只是代码的转换，这里只需关心<code>program.body</code>部分即可（是否可以操作tokens来更改代码，未做研究）。</p>
-<p>如上图1，程序代码里只有一个表达式<code>ExpressionStatement</code>。点击<code>+</code>展开，可以看到内部的细节，如下图：</p>
+<p>如上图，程序代码里只有一个表达式<code>ExpressionStatement</code>。点击<code>+</code>展开，可以看到内部的细节，如下图：</p>
 <p><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/1.literal.png" alt="图2 Literal"></p>
 <p>内部结构只有一个<code>Literal</code>，非常简单。更复杂的代码，我们在后续进行解释。</p>
 <h2 id="AST-的CRUD（Create-Retrieve-Update-Delete"><a href="#AST-的CRUD（Create-Retrieve-Update-Delete" class="headerlink" title="AST 的CRUD（Create-Retrieve-Update-Delete)"></a>AST 的CRUD（Create-Retrieve-Update-Delete)</h2><h3 id="1-Create"><a href="#1-Create" class="headerlink" title="1. Create"></a>1. Create</h3><p>实际上，<code>Create</code>是个相对复杂的操作，通常会结合<code>Retrieve</code>和<code>Update</code>使用。可以结合实际需要，选择阅读顺序。</p>
