@@ -140,10 +140,10 @@
 <li>Babylon和babel-traverse详解 <a href="https://github.com/xtx1130/blog/issues/7" target="_blank" rel="noopener">https://github.com/xtx1130/blog/issues/7</a>  其实也称不上详解，不过看到的比较早，算是启蒙文章吧</li>
 <li>Babel types <a href="https://babeljs.io/docs/core-packages/babel-types/" target="_blank" rel="noopener">https://babeljs.io/docs/core-packages/babel-types/</a> 生成代码时会大量用到</li>
 </ol>
-<h2 id="AST-explorer查看代码"><a href="#AST-explorer查看代码" class="headerlink" title="AST explorer查看代码"></a>AST explorer查看代码</h2><p>首先打开<a href="https://astexplorer.net/，直接在代码里填入`1`，查看基本效果" target="_blank" rel="noopener">https://astexplorer.net/，直接在代码里填入`1`，查看基本效果</a>.<br><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/1.png" alt="图1"></p>
+<h2 id="AST-explorer查看代码"><a href="#AST-explorer查看代码" class="headerlink" title="AST explorer查看代码"></a>AST explorer查看代码</h2><p>首先打开<a href="https://astexplorer.net/，直接在代码里填入`1`，查看基本效果" target="_blank" rel="noopener">https://astexplorer.net/，直接在代码里填入`1`，查看基本效果</a>.<br><img src="/2018/05/22/Javascript-Babylon-AST-create/1.png" alt="图1"></p>
 <p>我们要做的只是代码的转换，这里只需关心<code>program.body</code>部分即可（是否可以操作tokens来更改代码，未做研究）。</p>
 <p>如上图，程序代码里只有一个表达式<code>ExpressionStatement</code>。点击<code>+</code>展开，可以看到内部的细节，如下图：</p>
-<p><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/1.literal.png" alt="图2 Literal"></p>
+<p><img src="/2018/05/22/Javascript-Babylon-AST-create/1.literal.png" alt="图2 Literal"></p>
 <p>内部结构只有一个<code>Literal</code>，非常简单。更复杂的代码，我们在后续进行解释。</p>
 <h2 id="AST-的CRUD（Create-Retrieve-Update-Delete"><a href="#AST-的CRUD（Create-Retrieve-Update-Delete" class="headerlink" title="AST 的CRUD（Create-Retrieve-Update-Delete)"></a>AST 的CRUD（Create-Retrieve-Update-Delete)</h2><h3 id="1-Create"><a href="#1-Create" class="headerlink" title="1. Create"></a>1. Create</h3><p>实际上，<code>Create</code>是个相对复杂的操作，通常会结合<code>Retrieve</code>和<code>Update</code>使用。可以结合实际需要，选择阅读顺序。</p>
 <p>首先，构造一个空的<code>node</code>工程，后续会基于该项目一步步拓展。</p>
@@ -156,11 +156,11 @@
 <p>运行输出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input</span><br><span class="line"></span><br><span class="line">Output</span><br><span class="line"> 1;</span><br></pre></td></tr></table></figure>
 <p>这个例子中首先用到了<code>t</code>(babel-types)。可以在 <a href="https://babeljs.io/docs/core-packages/babel-types/" target="_blank" rel="noopener">https://babeljs.io/docs/core-packages/babel-types/</a> 查看文档。<code>t</code>里面有类型判断和生成实例等方法。<br>如<code>t.expressionStatement(literal)</code>就是生成一个<code>ExpressionStatement</code>，这个函数要用到的参数在文档中(<a href="https://babeljs.io/docs/core-packages/babel-types/#expressionstatement" target="_blank" rel="noopener">https://babeljs.io/docs/core-packages/babel-types/#expressionstatement</a>) 有描述：</p>
-<p><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/t.expression.png" alt="图t.expressionStatement"></p>
+<p><img src="/2018/05/22/Javascript-Babylon-AST-create/t.expression.png" alt="图t.expressionStatement"></p>
 <h4 id="构造const-a-1的代码"><a href="#构造const-a-1的代码" class="headerlink" title="构造const a = 1的代码"></a>构造<code>const a = 1</code>的代码</h4><p>上述<code>1</code>的代码过于简单，我们将进行<code>const a = 1</code>的代码生成。将<code>const a = 1</code>输入到AST explorer中，查看语法树信息如下图：</p>
-<p><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/consta1.png" alt="图const a = 1"></p>
+<p><img src="/2018/05/22/Javascript-Babylon-AST-create/consta1.png" alt="图const a = 1"></p>
 <p>这段代码中将涉及<code>VariableDeclaration</code>, <code>VariableDeclarator</code>, <code>Identifier</code>, <code>Literal</code>几个<code>babel-types</code>，<code>Literal</code>中使用的是数字类型<code>NumericLiteral</code>。可以分别查看其文档，如：<code>VariableDeclaration</code></p>
-<p><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/variabledeclaration.png" alt="图VariableDeclaration"></p>
+<p><img src="/2018/05/22/Javascript-Babylon-AST-create/variabledeclaration.png" alt="图VariableDeclaration"></p>
 <p>这个<code>t.variableDeclaration</code>有两个参数<code>kind</code>和<code>declarations</code>，后者是个数组。</p>
 <p>根据语法树，一层层的生成代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">const code = &apos;&apos;</span><br><span class="line">const ast = babylon.parse(code)</span><br><span class="line"></span><br><span class="line">// 生成 VariableDeclarator</span><br><span class="line">const id = t.identifier(&apos;a&apos;)</span><br><span class="line">const literal = t.numericLiteral(1)</span><br><span class="line">const declarator = t.variableDeclarator(id, literal)</span><br><span class="line"></span><br><span class="line">// 生成 VariableDeclaration</span><br><span class="line">const declaration = t.variableDeclaration(&apos;const&apos;, [declarator])</span><br><span class="line"></span><br><span class="line">// 将表达式放入body中</span><br><span class="line">ast.program.body.push(declaration)</span><br><span class="line"></span><br><span class="line">const output = generate(ast, &#123;&#125;, code)</span><br><span class="line">console.log(&apos;Input \n&apos;, code)</span><br><span class="line">console.log(&apos;Output \n&apos;, output.code)</span><br></pre></td></tr></table></figure>
@@ -170,7 +170,7 @@
 <p>最后，生成一个稍复杂一点的代码。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function add(a, b) &#123;</span><br><span class="line">  return a + b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>AST树如下</p>
-<p><img src="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/functionadd.png" alt="图function add"></p>
+<p><img src="/2018/05/22/Javascript-Babylon-AST-create/functionadd.png" alt="图function add"></p>
 <p>感兴趣的可以先尝试根据语法树提示写一下。再看下面的对照代码。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">const code = &apos;&apos;</span><br><span class="line">const ast = babylon.parse(code)</span><br><span class="line"></span><br><span class="line">// BinaryExpression a + b</span><br><span class="line">const binaryExp = t.binaryExpression(&apos;+&apos;, t.identifier(&apos;a&apos;), t.identifier(&apos;b&apos;))</span><br><span class="line">const returnStatement = t.returnStatement(binaryExp)</span><br><span class="line"></span><br><span class="line">// function body</span><br><span class="line">const fnBody = t.blockStatement([returnStatement])</span><br><span class="line">const params = [t.identifier(&apos;a&apos;), t.identifier(&apos;b&apos;)]</span><br><span class="line"></span><br><span class="line">const fnDeclaraton = t.functionDeclaration(t.identifier(&apos;add&apos;), params, fnBody)</span><br><span class="line">ast.program.body.push(fnDeclaraton)</span><br><span class="line"></span><br><span class="line">const output = generate(ast, &#123;&#125;, code)</span><br><span class="line">console.log(&apos;Input \n&apos;, code)</span><br><span class="line">console.log(&apos;Output \n&apos;, output.code)</span><br></pre></td></tr></table></figure>
 
@@ -210,7 +210,7 @@
     <h3>Recent Posts</h3>
     
         <p>
-            <a href="/2018/05/22/Javascript-Babylon-AST初探-代码生成-1/">Javascript-Babylon-AST初探-代码生成</a>
+            <a href="/2018/05/22/Javascript-Babylon-AST-create/">Javascript-Babylon-AST初探-代码生成</a>
         </p>
     
 </div>
