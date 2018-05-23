@@ -10,7 +10,10 @@
 
     <!--Description-->
     
-        <meta name="description" content="最近想研究react转小程序代码的，后来感觉跨度有些大，因为平时也会写一些vue的代码，而且vue和小程序更接近一些，所以还是先做了一个vue转小程序的PoC。可是这些都不是重点啊，重点是在这一过程中学习并使用了babylon的AST。因为也是第一次接触，所以想写点笔记记录一下，也希望能给大家一点参">
+        <meta name="description" content="针对语法树节点的查询(Retrieve)操作通常伴随着Update和Remove。这里介绍两种方式：直接访问和traverse。  
+本文所有对AST的操作均基于以下代码
+const babylon = require(&amp;#39;babylon&amp;#39;)
+const t = require(&amp;#3">
     
 
     <!--Author-->
@@ -20,7 +23,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Javascript-Babylon-AST初探-代码生成"/>
+        <meta property="og:title" content="ast-retrieve"/>
     
 
     <!--Open Graph Description-->
@@ -42,7 +45,7 @@
 
     <!-- Title -->
     
-    <title>Javascript-Babylon-AST初探-代码生成 - Hexo</title>
+    <title>ast-retrieve - Hexo</title>
 
     <!-- Tachyons Core CSS -->
     <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
@@ -118,8 +121,8 @@
     <!-- Title -->
     <div class="w-100 mw8 center vh-40 dt">
         <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">Javascript-Babylon-AST初探-代码生成</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2018-05-22</p>
+            <h1 class="f1-l f2-m tc tc-m tl-ns">ast-retrieve</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2018-05-23</p>
         </div>
     </div>
 
@@ -145,111 +148,232 @@
                     
 
                     <!-- Main Post Content -->
-                    <p>最近想研究<code>react</code>转<code>小程序</code>代码的，后来感觉跨度有些大，因为平时也会写一些<code>vue</code>的代码，而且<code>vue</code>和<code>小程序</code>更接近一些，所以还是先做了一个<code>vue</code>转<code>小程序</code>的PoC。可是这些都不是重点啊，重点是在这一过程中学习并使用了<code>babylon</code>的<code>AST</code>。因为也是第一次接触，所以想写点笔记记录一下，也希望能给大家一点参考。</p>
-<p>撸起袖子就是干，所以我这里还是以实战为主，涉及到的点也是在<code>vue</code>转<code>小程序</code>中用到的。可是也会有很多超出此范围的知识点，我们这里就先不做具体讨论啦，这里给出了一些参考资料，大家可以参考下。</p>
-<p>涉及到的参考资料：</p>
-<ol>
-<li>AST explorer: <a href="https://astexplorer.net/" target="_blank" rel="noopener">https://astexplorer.net/</a> 神器，阅读和书写<code>AST</code>操作全靠它啦</li>
-<li>Babel Plugin Handbook  <a href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md" target="_blank" rel="noopener">https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md</a>  从这里找到了一些<code>API</code></li>
-<li>Babylon和babel-traverse详解 <a href="https://github.com/xtx1130/blog/issues/7" target="_blank" rel="noopener">https://github.com/xtx1130/blog/issues/7</a>  其实也称不上详解，不过看到的比较早，算是启蒙文章吧</li>
-<li>Babel types <a href="https://babeljs.io/docs/core-packages/babel-types/" target="_blank" rel="noopener">https://babeljs.io/docs/core-packages/babel-types/</a> 生成代码时会大量用到</li>
-</ol>
-<h2 id="AST-explorer查看代码"><a href="#AST-explorer查看代码" class="headerlink" title="AST explorer查看代码"></a>AST explorer查看代码</h2><p>首先打开<a href="https://astexplorer.net/，直接在代码里填入`1`，查看基本效果" target="_blank" rel="noopener">https://astexplorer.net/，直接在代码里填入`1`，查看基本效果</a>.<br><img src="/2018/05/22/babylon-ast-create/Javascript-Babylon-AST-create/1.png" alt="图1"></p>
-<p>我们要做的只是代码的转换，这里只需关心<code>program.body</code>部分即可（是否可以操作tokens来更改代码，未做研究）。</p>
-<p>如上图，程序代码里只有一个表达式<code>ExpressionStatement</code>。点击<code>+</code>展开，可以看到内部的细节，如下图：</p>
-<p><img src="/2018/05/22/babylon-ast-create/Javascript-Babylon-AST-create/1.literal.png" alt="图2 Literal"></p>
-<p>内部结构只有一个<code>Literal</code>，非常简单。更复杂的代码，我们在后续进行解释。</p>
-<h2 id="AST-的CRUD（Create-Retrieve-Update-Delete"><a href="#AST-的CRUD（Create-Retrieve-Update-Delete" class="headerlink" title="AST 的CRUD（Create-Retrieve-Update-Delete)"></a>AST 的CRUD（Create-Retrieve-Update-Delete)</h2><h3 id="1-Create"><a href="#1-Create" class="headerlink" title="1. Create"></a>1. Create</h3><p>实际上，<code>Create</code>是个相对复杂的操作，通常会结合<code>Retrieve</code>和<code>Update</code>使用。可以结合实际需要，选择阅读顺序。</p>
-<p>首先，构造一个空的<code>node</code>工程，后续会基于该项目一步步拓展。</p>
-<pre><code>npm install babylon @babel/types @babel/generator @babel/traverse
-</code></pre><p>测试代码  </p>
+                    <p>针对语法树节点的查询(<code>Retrieve</code>)操作通常伴随着<code>Update</code>和<code>Remove</code>。这里介绍两种方式：直接访问和<code>traverse</code>。  </p>
+<p>本文所有对<code>AST</code>的操作均基于以下代码</p>
 <pre><code>const babylon = require(&#39;babylon&#39;)
 const t = require(&#39;@babel/types&#39;)
 const generate = require(&#39;@babel/generator&#39;).default
 const traverse = require(&#39;@babel/traverse&#39;).default
 
-const code = &#39;&#39;
-const ast = babylon.parse(code)
-// manipulate ast
-const output = generate(ast, {}, code)
-console.log(&#39;Input \n&#39;, code)
-console.log(&#39;Output \n&#39;, output.code)
-</code></pre><p>因为这里是空的<code>code</code>，所以<code>Input</code>和<code>Output</code>均无输出。</p>
-<h4 id="构造一个1的代码"><a href="#构造一个1的代码" class="headerlink" title="构造一个1的代码"></a>构造一个<code>1</code>的代码</h4><p>根据上面的两个图，只有<code>1</code>代码由一个<code>ExpressionStatement</code>内嵌一个<code>Literal</code>组成。直接代码如下，附带注释。</p>
-<pre><code>const code = &#39;&#39;
-const ast = babylon.parse(code)
-
-// 生成literal
-const literal = t.numericLiteral(1)
-// 生成expressionStatement
-const exp = t.expressionStatement(literal)
-// 将表达式放入body中
-ast.program.body.push(exp)
-
-const output = generate(ast, {}, code)
-console.log(&#39;Input \n&#39;, code)
-console.log(&#39;Output \n&#39;, output.code)
-</code></pre><p>运行输出</p>
-<pre><code>Input
-
-Output
- 1;
-</code></pre><p>这个例子中首先用到了<code>t</code>(babel-types)。可以在 <a href="https://babeljs.io/docs/core-packages/babel-types/" target="_blank" rel="noopener">https://babeljs.io/docs/core-packages/babel-types/</a> 查看文档。<code>t</code>里面有类型判断和生成实例等方法。<br>如<code>t.expressionStatement(literal)</code>就是生成一个<code>ExpressionStatement</code>，这个函数要用到的参数在文档中(<a href="https://babeljs.io/docs/core-packages/babel-types/#expressionstatement" target="_blank" rel="noopener">https://babeljs.io/docs/core-packages/babel-types/#expressionstatement</a>) 有描述：</p>
-<p><img src="/2018/05/22/babylon-ast-create/Javascript-Babylon-AST-create/t.expression.png" alt="图t.expressionStatement"></p>
-<h4 id="构造const-a-1的代码"><a href="#构造const-a-1的代码" class="headerlink" title="构造const a = 1的代码"></a>构造<code>const a = 1</code>的代码</h4><p>上述<code>1</code>的代码过于简单，我们将进行<code>const a = 1</code>的代码生成。将<code>const a = 1</code>输入到AST explorer中，查看语法树信息如下图：</p>
-<p><img src="/2018/05/22/babylon-ast-create/Javascript-Babylon-AST-create/consta1.png" alt="图const a = 1"></p>
-<p>这段代码中将涉及<code>VariableDeclaration</code>, <code>VariableDeclarator</code>, <code>Identifier</code>, <code>Literal</code>几个<code>babel-types</code>，<code>Literal</code>中使用的是数字类型<code>NumericLiteral</code>。可以分别查看其文档，如：<code>VariableDeclaration</code></p>
-<p><img src="/2018/05/22/babylon-ast-create/Javascript-Babylon-AST-create/variabledeclaration.png" alt="图VariableDeclaration"></p>
-<p>这个<code>t.variableDeclaration</code>有两个参数<code>kind</code>和<code>declarations</code>，后者是个数组。</p>
-<p>根据语法树，一层层的生成代码如下：</p>
-<pre><code>const code = &#39;&#39;
-const ast = babylon.parse(code)
-
-// 生成 VariableDeclarator
-const id = t.identifier(&#39;a&#39;)
-const literal = t.numericLiteral(1)
-const declarator = t.variableDeclarator(id, literal)
-
-// 生成 VariableDeclaration
-const declaration = t.variableDeclaration(&#39;const&#39;, [declarator])
-
-// 将表达式放入body中
-ast.program.body.push(declaration)
-
-const output = generate(ast, {}, code)
-console.log(&#39;Input \n&#39;, code)
-console.log(&#39;Output \n&#39;, output.code)
-</code></pre><p>执行结果如下：</p>
-<pre><code>Input
-
-Output
- const a = 1;
-</code></pre><h4 id="Create结语"><a href="#Create结语" class="headerlink" title="Create结语"></a><code>Create</code>结语</h4><p>根据AST explorer可以完美生成代码，常见的异常是参数未填对。多结合API文档和从小的代码片段生成做起能够规避这类错误。</p>
-<p>最后，生成一个稍复杂一点的代码。</p>
-<pre><code>function add(a, b) {
-  return a + b
+const code = `
+export default {
+  data() {
+    return {
+      message: &#39;hello vue&#39;,
+      count: 0
+    }
+  },
+  methods: {
+    add() {
+      ++this.count
+    },
+    minus() {
+      --this.count
+    }
+  }
 }
-</code></pre><p>AST树如下</p>
-<p><img src="/2018/05/22/babylon-ast-create/Javascript-Babylon-AST-create/functionadd.png" alt="图function add"></p>
-<p>感兴趣的可以先尝试根据语法树提示写一下。再看下面的对照代码。</p>
-<pre><code>const code = &#39;&#39;
-const ast = babylon.parse(code)
+`
 
-// BinaryExpression a + b
-const binaryExp = t.binaryExpression(&#39;+&#39;, t.identifier(&#39;a&#39;), t.identifier(&#39;b&#39;))
-const returnStatement = t.returnStatement(binaryExp)
-
-// function body
-const fnBody = t.blockStatement([returnStatement])
-const params = [t.identifier(&#39;a&#39;), t.identifier(&#39;b&#39;)]
-
-const fnDeclaraton = t.functionDeclaration(t.identifier(&#39;add&#39;), params, fnBody)
-ast.program.body.push(fnDeclaraton)
+const ast = babylon.parse(code, {
+  sourceType: &#39;module&#39;,
+  plugins: [&#39;flow&#39;]
+})
+</code></pre><p>对应的AST explorer的表示如下图：<br><img src="/2018/05/23/babylon-ast-retrieve/Javascript-Babylon-AST-retrieve/retrievemain.png" alt="图"></p>
+<h2 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h2><p>如上图中，有很多节点<code>Node</code>，如需要获取<code>ExportDefaultDeclaration</code>下的<code>data</code>函数，直接访问的方式如下：</p>
+<pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
+console.log(dataProperty)
+</code></pre><p>程序输出：</p>
+<pre><code>Node {
+  type: &#39;ObjectMethod&#39;,
+  start: 20,
+  end: 94,
+  loc:
+   SourceLocation {
+     start: Position { line: 3, column: 2 },
+     end: Position { line: 8, column: 3 } },
+  method: true,
+  shorthand: false,
+  computed: false,
+  key:
+   Node {
+     type: &#39;Identifier&#39;,
+     start: 20,
+     end: 24,
+     loc: SourceLocation { start: [Object], end: [Object], identifierName: &#39;data&#39; },
+     name: &#39;data&#39; },
+  kind: &#39;method&#39;,
+  id: null,
+  generator: false,
+  expression: false,
+  async: false,
+  params: [],
+  body:
+   Node {
+     type: &#39;BlockStatement&#39;,
+     start: 27,
+     end: 94,
+     loc: SourceLocation { start: [Object], end: [Object] },
+     body: [ [Object] ],
+     directives: [] } }
+</code></pre><p>这种直接访问的方式可以用于固定程序结构下的节点访问，当然也可以使用<strong>遍历</strong>树的方式来访问每个<code>Node</code>。</p>
+<p>这里插播一个<code>Update</code>操作，把<code>data</code>函数修改为<code>mydata</code>：</p>
+<pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
+dataProperty.key.name = &#39;mydata&#39;
 
 const output = generate(ast, {}, code)
-console.log(&#39;Input \n&#39;, code)
-console.log(&#39;Output \n&#39;, output.code)
-</code></pre>
+console.log(output.code)
+</code></pre><p>程序输出：</p>
+<pre><code>export default {
+  mydata() {
+    return {
+      message: &#39;hello vue&#39;,
+      count: 0
+    };
+  },
+
+  methods: {
+    add() {
+      ++this.count;
+    },
+
+    minus() {
+      --this.count;
+    }
+
+  }
+};
+</code></pre><h2 id="使用Traverse访问"><a href="#使用Traverse访问" class="headerlink" title="使用Traverse访问"></a>使用Traverse访问</h2><p>使用直接访问<code>Node</code>的方式，在简单场景下比较好用。但是对于一些复杂场景，存在以下问题：  </p>
+<ol>
+<li>需要处理某一类型的<code>Node</code>，比如<code>ThisExpression</code>、<code>ArrowFunctionExpression</code>等，这时候我们可能需要多次遍历<code>AST</code>才能完成操作    </li>
+<li>到达特定<code>Node</code>后，要访问其<code>parent</code>、<code>sibling</code>时，不方便</li>
+</ol>
+<p><code>@babel/traverse</code>库可以很好的解决这一问题。<code>traverse</code>的基本用法如下：</p>
+<pre><code>// 该代码打印所有 node.type。 可以使用`path.type`，可以使用`path.node.type`
+let space = 0
+
+traverse(ast, {
+  enter(path) {
+    console.log(new Array(space).fill(&#39; &#39;).join(&#39;&#39;), &#39;&gt;&#39;, path.node.type)
+    space += 2
+  },
+  exit(path) {
+    space -= 2
+    // console.log(new Array(space).fill(&#39; &#39;).join(&#39;&#39;), &#39;&lt;&#39;, path.type)
+  }
+})
+</code></pre><p>程序输出：</p>
+<pre><code> &gt; Program
+   &gt; ExportDefaultDeclaration
+     &gt; ObjectExpression
+       &gt; ObjectMethod
+         &gt; Identifier
+         &gt; BlockStatement
+           &gt; ReturnStatement
+             &gt; ObjectExpression
+               &gt; ObjectProperty
+                 &gt; Identifier
+                 &gt; StringLiteral
+               &gt; ObjectProperty
+                 &gt; Identifier
+                 &gt; NumericLiteral
+       &gt; ObjectProperty
+         &gt; Identifier
+         &gt; ObjectExpression
+           &gt; ObjectMethod
+             &gt; Identifier
+             &gt; BlockStatement
+               &gt; ExpressionStatement
+                 &gt; UpdateExpression
+                   &gt; MemberExpression
+                     &gt; ThisExpression
+                     &gt; Identifier
+           &gt; ObjectMethod
+             &gt; Identifier
+             &gt; BlockStatement
+               &gt; ExpressionStatement
+                 &gt; UpdateExpression
+                   &gt; MemberExpression
+                     &gt; ThisExpression
+                     &gt; Identifier
+</code></pre><p><code>traverse</code>引入了一个<code>NodePath</code>的概念，通过<code>NodePath</code>的<code>API</code>可以方便的访问父子、兄弟节点。</p>
+<p><strong>注意</strong> 上述代码打印出的<code>node.type</code>和AST explorer中的<code>type</code>并不完全一致。实际在使用<code>traverse</code>时，需要以上述打印出的<code>node.type</code>为准。如<code>data</code>函数，在AST explorer中的<code>type</code>为<code>Property</code>，但其实际的<code>type</code>为<code>ObjectMethod</code></p>
+<p>仍以上述访问<code>data</code>函数为例，<code>traverse</code>的写法如下：</p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    // 1
+    if (
+      t.isIdentifier(path.node.key, {
+        name: &#39;data&#39;
+      })
+    ) {
+      console.log(path.node)
+    }
+
+    // 2
+    if (path.node.key.name === &#39;data&#39;) {
+      console.log(path.node)
+    }
+  }
+})
+</code></pre><p>两个判断<code>Node</code>的方法都可以，孰优孰劣未做更多研究。</p>
+<p>通过<code>travase</code>获取到的是<code>NodePath</code>，<code>NodePath.node</code>等价于直接访问获取的<code>Node</code>节点，可以进行需要的操作。</p>
+<p>以下是一些从<code>babel-handbook</code>中看到的<code>NodePath</code>的<code>API</code>，做一些测试代码：</p>
+<p><strong>parent</strong></p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    if (path.node.key.name === &#39;data&#39;) {
+      const parent = path.parent
+      console.log(parent.type)    // output: ObjectExpression
+    }
+  }
+})
+</code></pre><p><strong>findParent</strong></p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    if (path.node.key.name === &#39;data&#39;) {
+      const parent = path.findParent(p =&gt; p.isExportDefaultDeclaration())
+      console.log(parent.type)
+    }
+  }
+})
+</code></pre><p><strong>find</strong> 从<code>Node</code>节点找起</p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    if (path.node.key.name === &#39;data&#39;) {
+      const parent = path.find(p =&gt; p.isObjectMethod())
+      console.log(parent.type) // output: ObjectMethod
+    }
+  }
+})
+</code></pre><p><strong>container</strong> 没太搞清楚，访问的<code>NodePath</code>如果是在<code>array</code>中的时候比较有用</p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    if (path.node.key.name === &#39;data&#39;) {
+      const container = path.container
+      console.log(container) // output: [...]
+    }
+  }
+})
+</code></pre><p><strong>getSibling</strong> 根据<code>index</code>获取兄弟节点</p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    if (path.node.key.name === &#39;data&#39;) {
+      const sibling0 = path.getSibling(0)
+      console.log(sibling0 === path) // true
+      const sibling1 = path.getSibling(path.key + 1)
+      console.log(sibling1.node.key.name) // methods
+    }
+  }
+})
+</code></pre><p><strong>skip</strong> 最后介绍一下<code>skip</code>，执行之后，就不会在对叶节点进行遍历</p>
+<pre><code>traverse(ast, {
+  enter(path) {
+    console.log(path.type)
+    path.skip()
+  }
+})
+</code></pre><p>程序输出根节点<code>Program</code>后结束。</p>
+
                     
                     <!-- Tags Bottom -->
                     
