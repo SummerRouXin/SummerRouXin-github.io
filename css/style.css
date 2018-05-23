@@ -345,7 +345,11 @@ td.hljs-ln-numbers {
   border-right: 1px solid #ccc;
   vertical-align: top;
   padding-right: 5px;
+  width: 20px;
 }
 td.hljs-ln-code {
   padding-left: 10px;
+}
+.content table tr:not(:last-child) td {
+  border-bottom: 0px solid #eee;
 }
