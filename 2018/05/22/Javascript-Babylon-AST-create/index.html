@@ -68,7 +68,12 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
 <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.3.0/highlightjs-line-numbers.min.js"></script>
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
 
 <body>
 
@@ -358,5 +363,4 @@ console.log(&#39;Output \n&#39;, output.code)
 
 
 </body>
-
 </html>
