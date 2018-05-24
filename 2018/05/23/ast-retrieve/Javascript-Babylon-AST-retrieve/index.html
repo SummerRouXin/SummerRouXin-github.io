@@ -178,7 +178,7 @@ const ast = babylon.parse(code, {
   sourceType: &#39;module&#39;,
   plugins: [&#39;flow&#39;]
 })
-</code></pre><p>对应的AST explorer的表示如下图：<br><img src="/2018/05/23/babylon-ast-retrieve/Javascript-Babylon-AST-retrieve/retrievemain.png" alt="图"></p>
+</code></pre><p>对应的AST explorer的表示如下图：<br><img src="/2018/05/23/ast-retrieve/Javascript-Babylon-AST-retrieve/retrievemain.png" alt="图"></p>
 <h2 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h2><p>如上图中，有很多节点<code>Node</code>，如需要获取<code>ExportDefaultDeclaration</code>下的<code>data</code>函数，直接访问的方式如下：</p>
 <pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
 console.log(dataProperty)
@@ -426,7 +426,7 @@ traverse(ast, {
     <h3>Recent Posts</h3>
     
         <p>
-            <a href="/2018/05/23/babylon-ast-retrieve/Javascript-Babylon-AST-retrieve/">Babylon-AST初探-代码查询(Retrieve)</a>
+            <a href="/2018/05/23/ast-retrieve/Javascript-Babylon-AST-retrieve/">Babylon-AST初探-代码查询(Retrieve)</a>
         </p>
     
         <p>
