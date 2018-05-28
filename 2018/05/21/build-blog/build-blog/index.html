@@ -219,26 +219,27 @@ categories: cate1
 <ul>
 <li>首先是引入库，这里有两种方式：<br>第一种是，执行命令<code>npm install highlightjs-line-numbers.js</code><br>第二种是，通过script的方式引入，<code>&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.3.0/highlightjs-line-numbers.min.js&quot;&gt;&lt;/script&gt;</code>。其实比较规范的操作应该是通过<code>npm install</code>的方式来引入，这样作者有更新，我们可以拉到最新代码，但是这里我为了跟<code>highlight</code>保持一致，使用了第二种方式。</li>
 <li>在<code>highlight</code>之后对行号插件进行初始化，代码为：<pre><code>hljs.initLineNumbersOnLoad();
-</code></pre>上述步骤以及<code>highlight</code>的具体代码截图如下图所示：<br><img src="/2018/05/21/build-blog/build-blog/line.png" alt="图hightlight"><br>如果行号的样式我们不喜欢，可以通过更改CSS的方式来改变，这边仍然以<code>Anodyne</code>风格为例，我在<code>anodyne/source/css/partial/_highlight</code>文件中加入了如下代码：<pre><code>td.hljs-ln-numbers
--webkit-touch-callout: none
--webkit-user-select: none
--khtml-user-select: none
--moz-user-select: none
--ms-user-select: none
-user-select: none
-text-align: center
-color: #ccc
-border-right: 1px solid #CCC
-vertical-align: top
-padding-right: 5px
-width: 20px
-td.hljs-ln-code
-padding-left: 10px
-.content table tr:not(:last-child) td
-border-bottom: 0px solid #eee
 </code></pre></li>
 </ul>
-<p>注意这边要是<code>styl</code>的格式来编写代码，可是<code>.styl</code>貌似不支持高亮，尴尬的很啊，这个有待进一步学习。</p>
+<p>上述步骤以及<code>highlight</code>的具体代码截图如下图所示：<br><img src="/2018/05/21/build-blog/build-blog/line.png" alt="图hightlight"><br>如果行号的样式我们不喜欢，可以通过更改CSS的方式来改变，这边仍然以<code>Anodyne</code>风格为例，我在<code>anodyne/source/css/partial/_highlight</code>文件中加入了如下代码：</p>
+<pre><code>td.hljs-ln-numbers
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+  text-align: center
+  color: #ccc
+  border-right: 1px solid #CCC
+  vertical-align: top
+  padding-right: 5px
+  width: 20px
+td.hljs-ln-code
+  padding-left: 10px
+.content table tr:not(:last-child) td
+  border-bottom: 0px solid #eee
+</code></pre><p>注意这边要是<code>styl</code>的格式来编写代码，可是<code>.styl</code>貌似不支持高亮，尴尬的很啊，这个有待进一步学习。</p>
 <p>以上，就是我们创建博客的一些基本功能的介绍，接下来我还会在博客中加入用户量统计以及评论框，敬请期待。</p>
 
                     
