@@ -10,10 +10,10 @@
 
     <!--Description-->
     
-        <meta name="description" content="针对语法树节点的查询(Retrieve)操作通常伴随着Update和Remove(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和traverse。  
-本文所有对AST的操作均基于以下这一段代码
+        <meta name="description" content="经过之前的三篇文章介绍，AST的CRUD都已经完成。下面主要通过vue转小程序过程中需要用到的部分关键技术来实战。
+下面的例子的核心代码依然是最简单的一个vue示例
 const babylon = require(&amp;#39;babylon&amp;#39;)
-const">
+const t = require(&amp;#39;@">
     
 
     <!--Author-->
@@ -23,7 +23,7 @@ const">
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Babylon-AST初探-代码查询(Retrieve)"/>
+        <meta property="og:title" content="Babylon-AST初探-实战"/>
     
 
     <!--Open Graph Description-->
@@ -45,7 +45,7 @@ const">
 
     <!-- Title -->
     
-    <title>Babylon-AST初探-代码查询(Retrieve) - Hexo</title>
+    <title>Babylon-AST初探-实战 - Hexo</title>
 
     <!-- Tachyons Core CSS -->
     <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
@@ -121,8 +121,8 @@ const">
     <!-- Title -->
     <div class="w-100 mw8 center vh-40 dt">
         <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">Babylon-AST初探-代码查询(Retrieve)</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2018-05-23</p>
+            <h1 class="f1-l f2-m tc tc-m tl-ns">Babylon-AST初探-实战</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2018-05-29</p>
         </div>
     </div>
 
@@ -148,8 +148,8 @@ const">
                     
 
                     <!-- Main Post Content -->
-                    <p>针对语法树节点的查询(<code>Retrieve</code>)操作通常伴随着<code>Update</code>和<code>Remove</code>(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和<code>traverse</code>。  </p>
-<p>本文所有对<code>AST</code>的操作均基于以下这一段代码</p>
+                    <p>经过之前的三篇文章介绍，<code>AST</code>的<code>CRUD</code>都已经完成。下面主要通过<code>vue</code>转小程序过程中需要用到的部分关键技术来实战。</p>
+<p>下面的例子的核心代码依然是最简单的一个<code>vue</code>示例</p>
 <pre><code>const babylon = require(&#39;babylon&#39;)
 const t = require(&#39;@babel/types&#39;)
 const generate = require(&#39;@babel/generator&#39;).default
@@ -178,59 +178,76 @@ const ast = babylon.parse(code, {
   sourceType: &#39;module&#39;,
   plugins: [&#39;flow&#39;]
 })
-</code></pre><p>对应的AST explorer的表示如下图：<br><img src="/2018/05/23/ast-retrieve/Javascript-Babylon-AST-retrieve/retrievemain.png" alt="图"></p>
-<h2 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h2><p>如上图中，有很多节点<code>Node</code>，如需要获取<code>ExportDefaultDeclaration</code>下的<code>data</code>函数，直接访问的方式如下：</p>
-<pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
-console.log(dataProperty)
-</code></pre><p>程序输出：</p>
-<pre><code>Node {
-  type: &#39;ObjectMethod&#39;,
-  start: 20,
-  end: 94,
-  loc:
-   SourceLocation {
-     start: Position { line: 3, column: 2 },
-     end: Position { line: 8, column: 3 } },
-  method: true,
-  shorthand: false,
-  computed: false,
-  key:
-   Node {
-     type: &#39;Identifier&#39;,
-     start: 20,
-     end: 24,
-     loc: SourceLocation { start: [Object], end: [Object], identifierName: &#39;data&#39; },
-     name: &#39;data&#39; },
-  kind: &#39;method&#39;,
-  id: null,
-  generator: false,
-  expression: false,
-  async: false,
-  params: [],
-  body:
-   Node {
-     type: &#39;BlockStatement&#39;,
-     start: 27,
-     end: 94,
-     loc: SourceLocation { start: [Object], end: [Object] },
-     body: [ [Object] ],
-     directives: [] } }
-</code></pre><p>这种直接访问的方式可以用于固定程序结构下的节点访问，当然也可以使用<strong>遍历</strong>树的方式来访问每个<code>Node</code>。</p>
-<p>这里插播一个<code>Update</code>操作，把<code>data</code>函数修改为<code>mydata</code>：</p>
-<pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
-dataProperty.key.name = &#39;mydata&#39;
+</code></pre><p>经过本文中的一些操作，我们将获得最终的小程序代码如下：</p>
+<pre><code>Page({
+  data: (() =&gt; {
+    const obj = {}
+    obj.message = &#39;hello vue&#39;
+    obj.count = 0
+    return obj
+  })(),
+  add() {
+    ++this.data.count
+    this.setData({
+      count: this.data.count
+    })
+  },
+  minus() {
+    --this.data.count
+    this.setData({
+      count: this.data.count
+    })
+  }
+})
+</code></pre><p>注意，跟我们之前介绍的一致，为了完成上述转换，要把输入和输出均放入AST explorer，查看其先后的结构对比。</p>
+<h2 id="vue代码转小程序"><a href="#vue代码转小程序" class="headerlink" title="vue代码转小程序"></a><code>vue</code>代码转小程序</h2><p>看开始展示的两份代码，为了实现转换，我们需要以下步骤：</p>
+<ol>
+<li>将<code>data</code>函数转<code>data</code>属性，然后删除<code>data</code>函数</li>
+<li>将<code>methods</code>里的属性提取出来，放到和<code>data</code>同一层级中，<code>methods</code>也要删除</li>
+<li>将所有的<code>this.[data member]</code>转换为<code>this.data.[data member]</code>。注意这里只转<code>data</code>中的属性</li>
+<li>在变更<code>this.data</code>的下面，插入<code>this.setData</code>来触发数据变更</li>
+</ol>
+<p>下面将按照这一步骤，一步一步完成转换，我觉得看到每一步的代码变化还是很有成就感滴。</p>
+<h3 id="生成data属性"><a href="#生成data属性" class="headerlink" title="生成data属性"></a>生成<code>data</code>属性</h3><p>这一步，我们要先提取原<code>data</code>函数中的<code>return</code>的对象。结合AST explorer，可以很方便的找到这一路径。</p>
+<pre><code>const dataObject = ast.program.body[0].declaration.properties[0].body.body[0].argument
+console.log(dataObject)
+</code></pre><p>但是，这段代码的可读性和鲁棒性基本是0。它强依赖我们书写的<code>data</code>函数是第一个属性。因此，这里我们将主要使用<code>traverse</code>来访问节点：</p>
+<pre><code>traverse(ast, {
+  ObjectMethod(path) {
+    if (path.node.key.name === &#39;data&#39;) {
+      // 获取第一级的 BlockStatement，也就是data函数体
+      let blockStatement = null
+      path.traverse({  //将traverse合并的写法
+        BlockStatement(p) {
+          blockStatement = p.node
+        }
+      })
 
-const output = generate(ast, {}, code)
-console.log(output.code)
+      // 用blockStatement生成ArrowFunctionExpression
+      const arrowFunctionExpression = t.arrowFunctionExpression([], blockStatement)
+      // 生成CallExpression
+      const callExpression = t.callExpression(arrowFunctionExpression, [])
+      // 生成data property
+      const dataProperty = t.objectProperty(t.identifier(&#39;data&#39;), callExpression)
+      // 插入到原data函数下方
+      path.insertAfter(dataProperty)
+
+      // 删除原data函数
+      path.remove()
+      // console.log(arrowFunctionExpression)
+    }
+  }
+})
+
+console.log(generate(ast, {}, code).code)
 </code></pre><p>程序输出：</p>
 <pre><code>export default {
-  mydata() {
+  data: (() =&gt; {
     return {
       message: &#39;hello vue&#39;,
       count: 0
     };
-  },
-
+  })(),
   methods: {
     add() {
       ++this.count;
@@ -242,137 +259,154 @@ console.log(output.code)
 
   }
 };
-</code></pre><h2 id="使用Traverse访问"><a href="#使用Traverse访问" class="headerlink" title="使用Traverse访问"></a>使用Traverse访问</h2><p>使用直接访问<code>Node</code>的方式，在简单场景下比较好用。可是对于一些复杂场景，存在以下问题：  </p>
-<ol>
-<li>需要处理某一类型的<code>Node</code>，比如<code>ThisExpression</code>、<code>ArrowFunctionExpression</code>等，这时候我们可能需要多次遍历<code>AST</code>才能完成操作    </li>
-<li>到达特定<code>Node</code>后，要访问他的<code>parent</code>、<code>sibling</code>时，不方便，但是这个也很常用</li>
-</ol>
-<p><code>@babel/traverse</code>库可以很好的解决这一问题。<code>traverse</code>的基本用法如下：</p>
-<pre><code>// 该代码打印所有 node.type。 可以使用`path.type`，可以使用`path.node.type`
-let space = 0
-
-traverse(ast, {
-  enter(path) {
-    console.log(new Array(space).fill(&#39; &#39;).join(&#39;&#39;), &#39;&gt;&#39;, path.node.type)
-    space += 2
-  },
-  exit(path) {
-    space -= 2
-    // console.log(new Array(space).fill(&#39; &#39;).join(&#39;&#39;), &#39;&lt;&#39;, path.type)
+</code></pre><h3 id="将methods中的属性提升一级"><a href="#将methods中的属性提升一级" class="headerlink" title="将methods中的属性提升一级"></a>将<code>methods</code>中的属性提升一级</h3><p>这里遍历<code>methods</code>中的属性没有再采用<code>traverse</code>，因为这里结构是固定的。</p>
+<pre><code>traverse(ast, {
+  ObjectProperty(path) {
+    if (path.node.key.name === &#39;methods&#39;) {
+      // 遍历属性并插入到原methods之后
+      path.node.value.properties.forEach(property =&gt; {
+        path.insertAfter(property)
+      })
+      // 删除原methods
+      path.remove()
+    }
   }
 })
 </code></pre><p>程序输出：</p>
-<pre><code> &gt; Program
-   &gt; ExportDefaultDeclaration
-     &gt; ObjectExpression
-       &gt; ObjectMethod
-         &gt; Identifier
-         &gt; BlockStatement
-           &gt; ReturnStatement
-             &gt; ObjectExpression
-               &gt; ObjectProperty
-                 &gt; Identifier
-                 &gt; StringLiteral
-               &gt; ObjectProperty
-                 &gt; Identifier
-                 &gt; NumericLiteral
-       &gt; ObjectProperty
-         &gt; Identifier
-         &gt; ObjectExpression
-           &gt; ObjectMethod
-             &gt; Identifier
-             &gt; BlockStatement
-               &gt; ExpressionStatement
-                 &gt; UpdateExpression
-                   &gt; MemberExpression
-                     &gt; ThisExpression
-                     &gt; Identifier
-           &gt; ObjectMethod
-             &gt; Identifier
-             &gt; BlockStatement
-               &gt; ExpressionStatement
-                 &gt; UpdateExpression
-                   &gt; MemberExpression
-                     &gt; ThisExpression
-                     &gt; Identifier
-</code></pre><p><code>traverse</code>引入了一个<code>NodePath</code>的概念，通过<code>NodePath</code>的<code>API</code>可以方便的访问父子、兄弟节点。</p>
-<p><strong>注意</strong> 上述代码打印出的<code>node.type</code>和AST explorer中的<code>type</code>并不完全一致。实际在使用<code>traverse</code>时，需要以上述打印出的<code>node.type</code>为准。如<code>data</code>函数，在AST explorer中的<code>type</code>为<code>Property</code>，但其实际的<code>type</code>为<code>ObjectMethod</code>。这个大家一定要注意，因为在我们后面的实际代码中也有用到。</p>
-<p>仍以上述访问<code>data</code>函数为例，<code>traverse</code>的写法如下：</p>
-<pre><code>traverse(ast, {
-  ObjectMethod(path) {
-    // 1
-    if (
-      t.isIdentifier(path.node.key, {
-        name: &#39;data&#39;
-      })
-    ) {
-      console.log(path.node)
-    }
+<pre><code>export default {
+  data: (() =&gt; {
+    return {
+      message: &#39;hello vue&#39;,
+      count: 0
+    };
+  })(),
 
-    // 2
-    if (path.node.key.name === &#39;data&#39;) {
-      console.log(path.node)
-    }
+  minus() {
+    --this.count;
+  },
+
+  add() {
+    ++this.count;
   }
-})
-</code></pre><p>上面两种判断<code>Node</code>的方法都可以，哪个更好一些，我也没有研究。</p>
-<p>通过<code>travase</code>获取到的是<code>NodePath</code>，<code>NodePath.node</code>等价于直接访问获取的<code>Node</code>节点，可以进行需要的操作。</p>
-<p>以下是一些从<code>babel-handbook</code>中看到的<code>NodePath</code>的<code>API</code>，写的一些测试代码，大家可以参考看下，都是比较常用的：</p>
-<p><strong>parent</strong></p>
-<pre><code>traverse(ast, {
-  ObjectMethod(path) {
+
+};
+</code></pre><h3 id="this-member转this-data-member"><a href="#this-member转this-data-member" class="headerlink" title="this.member转this.data.member"></a><code>this.member</code>转<code>this.data.member</code></h3><p>这一步，首先要从<code>data</code>属性中提取数据属性。这个有些依赖<code>data</code>中的函数到底写成怎么样，如果写成：</p>
+<pre><code>  data: (() =&gt; {
+    const obj = {}
+    obj.message = &#39;hello vue&#39;
+    obj.count = 0
+    return obj
+  })(),
+</code></pre><p>这将不符合我们这里的转化方法。当然我们可以通过求值来获取最终的对象，但这里也有缺陷。另一个思路是遍历其他成员函数，使用排除法。</p>
+<p>总之，我们需要一个方法来获取<code>this.data</code>中的属性。本文将继续以代码中的例子，通过<code>data</code>中的<code>return</code>方法来获取。</p>
+<pre><code>// 获取`this.data`中的属性
+const datas = []
+traverse(ast, {
+  ObjectProperty(path) {
     if (path.node.key.name === &#39;data&#39;) {
-      const parent = path.parent
-      console.log(parent.type)    // output: ObjectExpression
+      path.traverse({
+        ReturnStatement(path) {
+          path.traverse({
+            ObjectProperty(path) {
+              datas.push(path.node.key.name)
+              path.skip()
+            }
+          })
+          path.skip()
+        }
+      })
     }
-  }
-})
-</code></pre><p><strong>findParent</strong></p>
-<pre><code>traverse(ast, {
-  ObjectMethod(path) {
-    if (path.node.key.name === &#39;data&#39;) {
-      const parent = path.findParent(p =&gt; p.isExportDefaultDeclaration())
-      console.log(parent.type)
-    }
-  }
-})
-</code></pre><p><strong>find</strong> 从<code>Node</code>节点找起</p>
-<pre><code>traverse(ast, {
-  ObjectMethod(path) {
-    if (path.node.key.name === &#39;data&#39;) {
-      const parent = path.find(p =&gt; p.isObjectMethod())
-      console.log(parent.type) // output: ObjectMethod
-    }
-  }
-})
-</code></pre><p><strong>container</strong> 没太搞清楚，访问的<code>NodePath</code>如果是在<code>array</code>中的时候比较有用</p>
-<pre><code>traverse(ast, {
-  ObjectMethod(path) {
-    if (path.node.key.name === &#39;data&#39;) {
-      const container = path.container
-      console.log(container) // output: [...]
-    }
-  }
-})
-</code></pre><p><strong>getSibling</strong> 根据<code>index</code>获取兄弟节点</p>
-<pre><code>traverse(ast, {
-  ObjectMethod(path) {
-    if (path.node.key.name === &#39;data&#39;) {
-      const sibling0 = path.getSibling(0)
-      console.log(sibling0 === path) // true
-      const sibling1 = path.getSibling(path.key + 1)
-      console.log(sibling1.node.key.name) // methods
-    }
-  }
-})
-</code></pre><p><strong>skip</strong> 最后介绍一下<code>skip</code>，执行之后，就不会在对叶节点进行遍历</p>
-<pre><code>traverse(ast, {
-  enter(path) {
-    console.log(path.type)
     path.skip()
   }
 })
-</code></pre><p>程序输出根节点<code>Program</code>后结束。</p>
+console.log(datas)
+</code></pre><p>程序输出：</p>
+<pre><code>[ &#39;message&#39;, &#39;count&#39; ]
+</code></pre><p>修改数据属性至<code>this.data.</code></p>
+<pre><code>traverse(ast, {
+  MemberExpression(path) {
+    if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
+      path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
+    }
+  }
+})
+</code></pre><p>至此程序输出：</p>
+<pre><code>export default {
+  data: (() =&gt; {
+    return {
+      message: &#39;hello vue&#39;,
+      count: 0
+    };
+  })(),
+
+  minus() {
+    --this.data.count;
+  },
+
+  add() {
+    ++this.data.count;
+  }
+
+};
+</code></pre><h3 id="添加this-setState方法"><a href="#添加this-setState方法" class="headerlink" title="添加this.setState方法"></a>添加<code>this.setState</code>方法</h3><p>要想在变更<code>this.data</code>的下面，插入<code>this.setData</code>，我们首先要找到它插入的位置，即<code>this.data</code>的父节点，所以这就是我们的第一步操作：(MemberExpression就是上一步的，因为这一步的path与上一步相同)</p>
+<pre><code>traverse(ast, {
+  MemberExpression(path) {
+    if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
+      path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
+    }
+  }
+  const expressionStatement = path.findParent((parent) =&gt;   
+    parent.isExpressionStatement()
+  )
+})
+</code></pre><p>找到插入的位置后，我们就要构造要插入的函数，这时就用到了我们在这个系列第一篇文章中介绍的<code>Create</code>操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST explorerh和<code>babel-types</code>的<code>API</code>，然后找到从外向内一层一层的对照，这边我们就不详细介绍了，因为再详细我也不造该咋介绍。</p>
+<pre><code>traverse(ast, {
+  MemberExpression(path) {
+    if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
+      path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
+    }
+  }
+  const expressionStatement = path.findParent((parent) =&gt;   
+    parent.isExpressionStatement()
+  )
+  if(expressionStatement) {
+    const finalExpStatement =
+      t.expressionStatement(
+        t.callExpression(
+          t.memberExpression(t.thisExpression(), t.identifier(&#39;setData&#39;)),
+          [t.objectExpression([t.objectProperty(
+            t.identifier(propertyName), t.identifier(`this.data.${propertyName}`)
+          )])]
+        )
+      )
+    expressionStatement.insertAfter(finalExpStatement)
+  }
+})
+</code></pre><p>程序输出：</p>
+<pre><code>export default {
+  data: (() =&gt; {
+    return {
+      message: &#39;hello vue&#39;,
+      count: 0
+    };
+  })(),
+
+  minus() {
+    --this.count;
+    this.setData({
+      count: this.data.count
+    })
+  },
+
+  add() {
+    ++this.count;
+    this.setData({
+      count: this.data.count
+    })
+  }
+
+};
+</code></pre><p>以上就是我们实战介绍，这边只涉及到<code>vue</code>转<code>小程序</code>的部分代码，以后可以考虑继续介绍其他模块。</p>
 
                     
                     <!-- Tags Bottom -->
