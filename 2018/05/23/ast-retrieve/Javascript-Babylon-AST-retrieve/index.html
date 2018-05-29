@@ -10,10 +10,10 @@
 
     <!--Description-->
     
-        <meta name="description" content="针对语法树节点的查询(Retrieve)操作通常伴随着Update和Remove。这里介绍两种方式：直接访问和traverse。  
-本文所有对AST的操作均基于以下代码
+        <meta name="description" content="针对语法树节点的查询(Retrieve)操作通常伴随着Update和Remove(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和traverse。  
+本文所有对AST的操作均基于以下这一段代码
 const babylon = require(&amp;#39;babylon&amp;#39;)
-const t = require(&amp;#3">
+const">
     
 
     <!--Author-->
@@ -148,8 +148,8 @@ const t = require(&amp;#3">
                     
 
                     <!-- Main Post Content -->
-                    <p>针对语法树节点的查询(<code>Retrieve</code>)操作通常伴随着<code>Update</code>和<code>Remove</code>。这里介绍两种方式：直接访问和<code>traverse</code>。  </p>
-<p>本文所有对<code>AST</code>的操作均基于以下代码</p>
+                    <p>针对语法树节点的查询(<code>Retrieve</code>)操作通常伴随着<code>Update</code>和<code>Remove</code>(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和<code>traverse</code>。  </p>
+<p>本文所有对<code>AST</code>的操作均基于以下这一段代码</p>
 <pre><code>const babylon = require(&#39;babylon&#39;)
 const t = require(&#39;@babel/types&#39;)
 const generate = require(&#39;@babel/generator&#39;).default
@@ -242,10 +242,10 @@ console.log(output.code)
 
   }
 };
-</code></pre><h2 id="使用Traverse访问"><a href="#使用Traverse访问" class="headerlink" title="使用Traverse访问"></a>使用Traverse访问</h2><p>使用直接访问<code>Node</code>的方式，在简单场景下比较好用。但是对于一些复杂场景，存在以下问题：  </p>
+</code></pre><h2 id="使用Traverse访问"><a href="#使用Traverse访问" class="headerlink" title="使用Traverse访问"></a>使用Traverse访问</h2><p>使用直接访问<code>Node</code>的方式，在简单场景下比较好用。可是对于一些复杂场景，存在以下问题：  </p>
 <ol>
 <li>需要处理某一类型的<code>Node</code>，比如<code>ThisExpression</code>、<code>ArrowFunctionExpression</code>等，这时候我们可能需要多次遍历<code>AST</code>才能完成操作    </li>
-<li>到达特定<code>Node</code>后，要访问其<code>parent</code>、<code>sibling</code>时，不方便</li>
+<li>到达特定<code>Node</code>后，要访问他的<code>parent</code>、<code>sibling</code>时，不方便，但是这个也很常用</li>
 </ol>
 <p><code>@babel/traverse</code>库可以很好的解决这一问题。<code>traverse</code>的基本用法如下：</p>
 <pre><code>// 该代码打印所有 node.type。 可以使用`path.type`，可以使用`path.node.type`
@@ -296,7 +296,7 @@ traverse(ast, {
                      &gt; ThisExpression
                      &gt; Identifier
 </code></pre><p><code>traverse</code>引入了一个<code>NodePath</code>的概念，通过<code>NodePath</code>的<code>API</code>可以方便的访问父子、兄弟节点。</p>
-<p><strong>注意</strong> 上述代码打印出的<code>node.type</code>和AST explorer中的<code>type</code>并不完全一致。实际在使用<code>traverse</code>时，需要以上述打印出的<code>node.type</code>为准。如<code>data</code>函数，在AST explorer中的<code>type</code>为<code>Property</code>，但其实际的<code>type</code>为<code>ObjectMethod</code></p>
+<p><strong>注意</strong> 上述代码打印出的<code>node.type</code>和AST explorer中的<code>type</code>并不完全一致。实际在使用<code>traverse</code>时，需要以上述打印出的<code>node.type</code>为准。如<code>data</code>函数，在AST explorer中的<code>type</code>为<code>Property</code>，但其实际的<code>type</code>为<code>ObjectMethod</code>。这个大家一定要注意，因为在我们后面的实际代码中也有用到。</p>
 <p>仍以上述访问<code>data</code>函数为例，<code>traverse</code>的写法如下：</p>
 <pre><code>traverse(ast, {
   ObjectMethod(path) {
@@ -315,9 +315,9 @@ traverse(ast, {
     }
   }
 })
-</code></pre><p>两个判断<code>Node</code>的方法都可以，孰优孰劣未做更多研究。</p>
+</code></pre><p>上面两种判断<code>Node</code>的方法都可以，哪个更好一些，我也没有研究。</p>
 <p>通过<code>travase</code>获取到的是<code>NodePath</code>，<code>NodePath.node</code>等价于直接访问获取的<code>Node</code>节点，可以进行需要的操作。</p>
-<p>以下是一些从<code>babel-handbook</code>中看到的<code>NodePath</code>的<code>API</code>，做一些测试代码：</p>
+<p>以下是一些从<code>babel-handbook</code>中看到的<code>NodePath</code>的<code>API</code>，写的一些测试代码，大家可以参考看下，都是比较常用的：</p>
 <p><strong>parent</strong></p>
 <pre><code>traverse(ast, {
   ObjectMethod(path) {
