@@ -162,7 +162,7 @@ traverse(ast, {
 
 console.log(generate(ast, {}, code).code) // const c = a * b;
 </code></pre><h3 id="将this-count替换为this-data-count"><a href="#将this-count替换为this-data-count" class="headerlink" title="将this.count替换为this.data.count"></a>将<code>this.count</code>替换为<code>this.data.count</code></h3><p>转换前后的<code>AST</code>展示如下图：</p>
-<p><img src="/2018/05/28/ast-update-remove/Javasrcipt-Babylon-AST-update-remove/this.count.png" alt="图this.count"></p>
+<p><img src="/2018/05/28/ast-update-remove/Javasrcipt-Babylon-AST-update-remove/count.jpeg" alt="图this.count"></p>
 <p>我们需要做的是，找到符合<code>this.count</code>的<code>ThisExpression</code>，然后把它替换为<code>this.data</code></p>
 <pre><code>const code = `this.count`
 const ast = babylon.parse(code)
