@@ -10,9 +10,8 @@
 
     <!--Description-->
     
-        <meta name="description" content="最近想搭建自己的博客，在网上查了攻略之后决定使用Hexo+github来搭建，搭建过程中也遇到了一些问题，所以本文一方面是让大家有一个参考，还有就是记录一下方便自己以后查看。废话不多说啦，下面就来详细介绍具体步骤。
-PS：我博客的地址：https://summerrouxin.github.io/
-">
+        <meta name="description" content="&amp;emsp;&amp;emsp;最近想搭建自己的博客，在网上查了攻略之后决定使用Hexo+github来搭建，搭建过程中也遇到了一些问题，所以本文一方面是让大家有一个参考，还有就是记录一下方便自己以后查看。废话不多说啦，下面就来详细介绍具体步骤。
+PS：我博客的地址：https://summerrouxin">
     
 
     <!--Author-->
@@ -141,25 +140,25 @@ PS：我博客的地址：https://summerrouxin.github.io/
                     
 
                     <!-- Main Post Content -->
-                    <p>最近想搭建自己的博客，在网上查了攻略之后决定使用Hexo+github来搭建，搭建过程中也遇到了一些问题，所以本文一方面是让大家有一个参考，还有就是记录一下方便自己以后查看。废话不多说啦，下面就来详细介绍具体步骤。</p>
+                    <p>&emsp;&emsp;最近想搭建自己的博客，在网上查了攻略之后决定使用Hexo+github来搭建，搭建过程中也遇到了一些问题，所以本文一方面是让大家有一个参考，还有就是记录一下方便自己以后查看。废话不多说啦，下面就来详细介绍具体步骤。</p>
 <p>PS：我博客的地址：<a href="https://summerrouxin.github.io/" target="_blank" rel="noopener">https://summerrouxin.github.io/</a></p>
-<h2 id="1、什么是hexo"><a href="#1、什么是hexo" class="headerlink" title="1、什么是hexo"></a>1、什么是hexo</h2><p><a href="https://hexo.io/zh-cn/index.html" target="_blank" rel="noopener">Hexo</a>是基于<code>NodeJs</code>的静态博客框架，具有快速、简洁、高效等特点。使用Markdown（或其他渲染引擎）解析文章，生成的静态网页可以托管在<code>Github</code>和<code>Heroku</code>上。</p>
-<h2 id="2、环境配置"><a href="#2、环境配置" class="headerlink" title="2、环境配置"></a>2、环境配置</h2><h3 id="2-1-安装git"><a href="#2-1-安装git" class="headerlink" title="2.1 安装git"></a>2.1 安装git</h3><p>看到这篇博客的应该大部分都是程序员，所以<a href="https://git-scm.com/download/win" target="_blank" rel="noopener">git</a>一定不会陌生，所以这里只给出官网上操作步骤，供大家参考。</p>
+<h2 id="1、什么是hexo"><a href="#1、什么是hexo" class="headerlink" title="1、什么是hexo"></a>1、什么是hexo</h2><p>&emsp;&emsp;<a href="https://hexo.io/zh-cn/index.html" target="_blank" rel="noopener">Hexo</a>是基于<code>NodeJs</code>的静态博客框架，具有快速、简洁、高效等特点。使用Markdown（或其他渲染引擎）解析文章，生成的静态网页可以托管在<code>Github</code>和<code>Heroku</code>上。</p>
+<h2 id="2、环境配置"><a href="#2、环境配置" class="headerlink" title="2、环境配置"></a>2、环境配置</h2><h3 id="2-1-安装git"><a href="#2-1-安装git" class="headerlink" title="2.1 安装git"></a>2.1 安装git</h3><p>&emsp;&emsp;看到这篇博客的应该大部分都是程序员，所以<code>git</code>一定不会陌生，所以这里只给出官网上操作步骤，供大家参考。</p>
 <ul>
-<li>Windows：下载并安装<a href="https://git-scm.com/download/win" target="_blank" rel="noopener">git</a>.</li>
+<li>Windows：下载并安装 <a href="https://git-scm.com/download/win" target="_blank" rel="noopener">git</a> 。</li>
 <li>Mac：使用 Homebrew, MacPorts ：<code>brew install git</code>;或下载 安装程序 安装。</li>
 <li>Linux (Ubuntu, Debian)：<code>sudo apt-get install git-core</code></li>
 <li>Linux (Fedora, Red Hat, CentOS)：<code>sudo yum install git-core</code></li>
 </ul>
-<p>检验是否安装成功：<br><code>$ git version</code></p>
-<h3 id="2-2-安装nodejs"><a href="#2-2-安装nodejs" class="headerlink" title="2.2 安装nodejs"></a>2.2 安装nodejs</h3><p>去<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">nodejs</a>官网下载所需系统的安装包，并根据提示安装即可。<br>检验是否安装成功：<br><code>$ node -v</code></p>
-<h3 id="2-3-安装hexo"><a href="#2-3-安装hexo" class="headerlink" title="2.3 安装hexo"></a>2.3 安装hexo</h3><p>上述两个必备程序安装成功之后，只需要通过npm便可以完成Hexo的安装了。<br><code>$ npm install -g hexo-cli</code><br>至此，环境配置就完成啦！可以开始搭建博客啦！</p>
-<h2 id="3、新建博客-rouxin"><a href="#3、新建博客-rouxin" class="headerlink" title="3、新建博客 rouxin"></a>3、新建博客 rouxin</h2><h3 id="3-1-创建github仓库"><a href="#3-1-创建github仓库" class="headerlink" title="3.1 创建github仓库"></a>3.1 创建github仓库</h3><p>进入GitHub新建repo，<strong>注意：这里的仓库名称要和你的username对应，这边很容易出问题，所以一定要注意</strong>，如下图所示：</p>
+<p>&emsp;&emsp;检验是否安装成功：<br>&emsp;&emsp;<code>$ git version</code></p>
+<h3 id="2-2-安装nodejs"><a href="#2-2-安装nodejs" class="headerlink" title="2.2 安装nodejs"></a>2.2 安装nodejs</h3><p>&emsp;&emsp;去 <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">nodejs</a> 官网下载所需系统的安装包，并根据提示安装即可。检验是否安装成功：<br>&emsp;&emsp;<code>$ node -v</code></p>
+<h3 id="2-3-安装hexo"><a href="#2-3-安装hexo" class="headerlink" title="2.3 安装hexo"></a>2.3 安装hexo</h3><p>&emsp;&emsp;上述两个必备程序安装成功之后，只需要通过npm便可以完成Hexo的安装了。<br>&emsp;&emsp;<code>$ npm install -g hexo-cli</code><br>&emsp;&emsp;至此，环境配置就完成了，可以开始搭建博客啦！</p>
+<h2 id="3、新建博客-rouxin"><a href="#3、新建博客-rouxin" class="headerlink" title="3、新建博客 rouxin"></a>3、新建博客 rouxin</h2><h3 id="3-1-创建github仓库"><a href="#3-1-创建github仓库" class="headerlink" title="3.1 创建github仓库"></a>3.1 创建github仓库</h3><p>&emsp;&emsp;进入GitHub新建repo，<strong>注意</strong> 这里的仓库名称要和你的username对应，这边很容易出问题，所以一定要注意，如下图所示：</p>
 <p><img src="/2018/05/21/build-blog/build-blog/github.png" alt="图新建repo"></p>
 <h3 id="3-2-hexo操作"><a href="#3-2-hexo操作" class="headerlink" title="3.2 hexo操作"></a>3.2 hexo操作</h3><pre><code>$ hexo init rouxin
 $ cd rouxin
 $ npm install
-</code></pre><p>新建完成后，可以看到文件夹的结构如下：</p>
+</code></pre><p>&emsp;&emsp;上面三步主要完成初始化hexo的文件夹，安装依赖。新建完成后，可以看到文件夹的结构如下：</p>
 <pre><code>.
 ├── _config.yml
 ├── package.json
@@ -168,26 +167,31 @@ $ npm install
 |   ├── _drafts
 |   └── _posts
 └── themes
-</code></pre><p>其中，<code>_config.yml</code>是配置文件，后面我们也会介绍具体可以配置哪些信息。<br><code>source</code>是资源文件夹，用来存放我们的markdown文件。<br><code>themes</code>文件夹是用来放置主题的，后面主题部分我们将详细介绍。<br>修改配置文件<code>_config.yml</code>中以下几个字段：<br><img src="/2018/05/21/build-blog/build-blog/deploy.png" alt="图部署"><br>其中，</p>
+</code></pre><p>&emsp;&emsp;其中，<code>_config.yml</code>是配置文件，这个文件我们会经常用到，后面也会介绍具体可以配置哪些信息。<br>&emsp;&emsp;<code>source</code>是资源文件夹，用来存放我们的markdown文件。<br>&emsp;&emsp;<code>themes</code>文件夹是用来放置主题的，后面主题部分我们将详细介绍。</p>
+<p>&emsp;&emsp;下面我们修改配置文件<code>_config.yml</code>中以下几个字段，完成部署的相关配置：</p>
+<p><img src="/2018/05/21/build-blog/build-blog/deploy.png" alt="图部署"><br>其中，</p>
 <ul>
 <li><code>type</code>字段对应的是部署的服务器类型，我们在这边填写git即可</li>
-<li><code>repo</code>是上一个步骤创建的github仓库的地址</li>
+<li><code>repo</code>是我们在<code>3.1</code>中创建的github仓库的地址</li>
 <li><code>branch</code>是文件的分支，默认是master</li>
 </ul>
-<p>完成以上配置后，在终端执行<code>npm install hexo-deployer-git --save</code>，这个操作主要是为了把我们写好的文章部署到<code>github</code>服务器上并可以被别人浏览。</p>
-<h2 id="4、发文章"><a href="#4、发文章" class="headerlink" title="4、发文章"></a>4、发文章</h2><p>当然啦，我们新建博客的目的肯定是为了自己写文章，通过命令<code>$ hexo new test_md</code>就可以新建文章，此时会在<code>source/_posts</code>目录下生成<code>test_md.md</code>文件，在<code>test_md.md</code>这个输入内容后，保存一下。<br>运行以下命令（以下我们称为三步走），访问localhost:4000就可以看到效果啦。</p>
+<p>&emsp;&emsp;完成上述配置后，在终端执行<code>npm install hexo-deployer-git --save</code>，这个操作主要是为了把我们写好的文章部署到<code>github</code>服务器上并可以被别人浏览。</p>
+<h2 id="4、发文章"><a href="#4、发文章" class="headerlink" title="4、发文章"></a>4、发文章</h2><p>&emsp;&emsp;当然啦，我们新建博客的目的肯定是为了自己写文章，通过命令<br>&emsp;&emsp;<code>$ hexo new test_md</code><br>就可以新建文章，此时会在<code>source/_posts</code>目录下生成<code>test_md.md</code>文件，在<code>test_md.md</code>中输入内容后，保存一下。<br>&emsp;&emsp;运行以下命令（以下我们称为三步走），访问localhost:4000就可以看到效果啦。</p>
 <pre><code>$ hexo clean
 $ hexo g
 $ hexo s
-</code></pre><p>其中<code>hexo clean</code>是为了清除缓存，和已经生成的静态文件(<code>publish</code>文件夹)；<code>hexo g</code>是命令<code>hexo generate</code>的简写，生成静态文件；<code>hexo s</code>是命令<code>hexo server</code>的简写。默认情况下，访问网址为：<code>http://localhost:4000/</code><br>在本地看到效果后，可以通过命令<code>$ hexo d</code>(即<code>hexo deploy</code>)将网站进行部署。<br>完成以上步骤之后，我们访问链接<code>https://summerrouxin.github.io/</code>就可以看到博客啦～～～手机也可以查看哦</p>
-<h2 id="5、个性化定制"><a href="#5、个性化定制" class="headerlink" title="5、个性化定制"></a>5、个性化定制</h2><p>完成以上步骤，其实我们的基础功能已经完成啦，可是为了博客能更好看一些我还想做一些个性化的定制，首先肯定是想换下主题</p>
-<h3 id="5-1-更换主题"><a href="#5-1-更换主题" class="headerlink" title="5.1 更换主题"></a>5.1 更换主题</h3><p>其实我在本地运行的时候就想换主题了，所以在博客跑起来之后我第一件事就是去更换主题，关于主题网上有很多介绍，有一些来自于<a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo官方的主题</a>，也有一些是自己开发的，这边我们为了能够快速搞定，所以选择了在官方主题上进行选择：<br><strong>获取主题</strong><br>首先我们在官网上找到自己喜欢的主题，我不得不吐槽一下，官方的主题真的有些太man了，我们这些女码农真的很难找到自己喜欢的主题。。。我把列表来回看了三遍，勉强选择了<code>Anodyne</code>，所以下面我们都以<code>Anodyne</code>为例。把主题的地址克隆到博客目录的<code>themes</code>下，执行<br><code>$ git clone https://github.com/klugjo/hexo-theme-anodyne</code><br>然后我们还是要到配置文件<code>_config.yml</code>中，修改theme字段，如下图所示<br><img src="/2018/05/21/build-blog/build-blog/theme.png" alt="图主题"><br>接着执行三步走的代码，就可以在本地看到更换主题的效果。</p>
-<h3 id="5-2-修改导航栏"><a href="#5-2-修改导航栏" class="headerlink" title="5.2 修改导航栏"></a>5.2 修改导航栏</h3><p>修改导航栏，这次我们要修改的仍然是配置文件_config.yml，不过不是之前修改的全局的配置文件，而是主题下的配置文件<code>themes/anodyne/_config.yml</code>，在主题中找到<code>menu</code>字段，因为这边我们主要有两个页面，一个是首页还有是一个是归档页面，所以将<code>About</code>和<code>Contact</code>的路由都改为了首页，即<code>/</code>。如下图所示：<br><img src="/2018/05/21/build-blog/build-blog/menu.png" alt="图导航栏"></p>
-<h3 id="5-3-设置标签与分类"><a href="#5-3-设置标签与分类" class="headerlink" title="5.3 设置标签与分类"></a>5.3 设置标签与分类</h3><p><strong>给文章贴标签</strong><br>首先需要确认全局的配置文件<code>_config.yml</code>中有<code>tag_dir: tags</code>，确认过之后就可以新建tags页面啦。命令为：<br><code>$ hexo new page tags</code><br>此时会在全局的<code>source</code>文件下新建文件夹<code>tags</code>文件夹，修改<code>tags/index.md</code>文件</p>
+</code></pre><p>&emsp;&emsp;其中<code>hexo clean</code>是为了清除缓存，和已经生成的静态文件(<code>publish</code>文件夹)；<code>hexo g</code>是命令<code>hexo generate</code>的简写，生成静态文件；<code>hexo s</code>是命令<code>hexo server</code>的简写。默认情况下，访问网址为：<code>http://localhost:4000/</code><br>&emsp;&emsp;在本地看到效果后，可以通过命令<code>$ hexo d</code>(即<code>hexo deploy</code>)将网站进行部署。<br>&emsp;&emsp;完成以上步骤之后，我们访问链接<code>https://summerrouxin.github.io/</code>就可以看到博客啦～～～手机也可以查看哦</p>
+<h2 id="5、个性化定制"><a href="#5、个性化定制" class="headerlink" title="5、个性化定制"></a>5、个性化定制</h2><p>&emsp;&emsp;完成以上步骤，其实我们的基础功能已经完成啦，可是为了博客能更好看一些我还想做一些个性化的定制，首先肯定是想换下主题</p>
+<h3 id="5-1-更换主题"><a href="#5-1-更换主题" class="headerlink" title="5.1 更换主题"></a>5.1 更换主题</h3><p>&emsp;&emsp;默认的主题实在有些不能忍啊啊，所以在博客跑起来之后我第一件事就是去更换主题，关于主题网上有很多介绍，有一些来自于 <a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo官方的主题</a> ，也有一些是自己开发的，这边我们为了能够快速搞定，就在官方主题上进行选择<br>&emsp;&emsp;首先我们在官网上找到自己喜欢的主题，可是我不得不吐槽一下，官方的主题真的有些太man了，我们这些女码农真的很难找到自己喜欢的主题。。。我把列表来回看了三遍，勉强选择了<code>Anodyne</code>，所以下面我们都以<code>Anodyne</code>为例。把主题的地址克隆到博客目录的<code>themes</code>下，执行<br><code>$ git clone https://github.com/klugjo/hexo-theme-anodyne</code><br>然后我们还是要到配置文件<code>_config.yml</code>中，修改theme字段，如下图所示</p>
+<p><img src="/2018/05/21/build-blog/build-blog/theme.png" alt="图主题"></p>
+<p>&emsp;&emsp;接着执行三步走的代码，就可以在本地看到更换主题的效果。</p>
+<h3 id="5-2-修改导航栏"><a href="#5-2-修改导航栏" class="headerlink" title="5.2 修改导航栏"></a>5.2 修改导航栏</h3><p>&emsp;&emsp;修改导航栏，这次我们要修改的仍然是配置文件_config.yml，不过不是之前修改的全局的配置文件，而是主题下的配置文件<code>themes/anodyne/_config.yml</code>，在主题中找到<code>menu</code>字段，因为这边我们主要有两个页面，一个是首页还有是一个是归档页面，<code>About</code>和<code>Contact</code>没有对应页面，所以将<code>About</code>和<code>Contact</code>的路由都改为了首页，即<code>/</code>。如下图所示：</p>
+<p><img src="/2018/05/21/build-blog/build-blog/menu.png" alt="图导航栏"></p>
+<h3 id="5-3-设置标签与分类"><a href="#5-3-设置标签与分类" class="headerlink" title="5.3 设置标签与分类"></a>5.3 设置标签与分类</h3><p><strong>给文章贴标签</strong><br>&emsp;&emsp;首先需要确认全局的配置文件<code>_config.yml</code>中有<code>tag_dir: tags</code>，确认过之后就可以新建tags页面啦。命令为：<br><code>$ hexo new page tags</code><br>&emsp;&emsp;此时会在全局的<code>source</code>文件下新建文件夹<code>tags</code>文件夹，修改<code>tags/index.md</code>文件</p>
 <pre><code>title: tags
 date: 2018-05-23 19:52:31
 type: &quot;tags&quot;
-</code></pre><p>全局设置好标签之后就可以给文章贴标签了，在文章的<code>.md</code>文件中添加：</p>
+</code></pre><p>&emsp;&emsp;全局设置好标签之后就可以给文章贴标签了，在文章的<code>.md</code>文件中添加：</p>
 <pre><code>tags:
       - tag1
       - tag2
@@ -195,7 +199,7 @@ type: &quot;tags&quot;
 <pre><code>title: test_md
 date: 2018-05-23 20:10:12
 tags: tag1
-</code></pre><p><strong>设置文章分类</strong><br>给文章设置分类与上面介绍的设置标签类似，也需要首先确认一下全局的配置文件<code>_config.yml</code>中有<code>category_dir: categories</code>，接着新建<code>categories</code>文件<br><code>$ hexo new page categories</code><br>此时会在全局的<code>source</code>文件下新建文件夹<code>categories</code>文件夹，修改<code>categories/index.md</code>文件</p>
+</code></pre><p><strong>设置文章分类</strong><br>&emsp;&emsp;给文章设置分类与上面介绍的设置标签类似，也需要首先确认一下全局的配置文件<code>_config.yml</code>中有<code>category_dir: categories</code>，接着新建<code>categories</code>文件<br><code>$ hexo new page categories</code><br>此时会在全局的<code>source</code>文件下新建文件夹<code>categories</code>文件夹，修改<code>categories/index.md</code>文件</p>
 <pre><code>title: 文章分类
 date: 2018-05-23 20:19:38
 type: &quot;categories&quot;
@@ -207,22 +211,26 @@ type: &quot;categories&quot;
 <pre><code>title: test_md
 date: 2018-05-23 20:10:12
 categories: cate1
-</code></pre><h3 id="5-4-设置代码高亮、行号"><a href="#5-4-设置代码高亮、行号" class="headerlink" title="5.4 设置代码高亮、行号"></a>5.4 设置代码高亮、行号</h3><p><strong>代码高亮</strong><br>完成了基本中能之后，可以正式开始写博客了，可是在写的过程中又发现了新问题：博客内的代码没有高亮。为了解决这个问题，在网上查了一些资料，hexo默认已经实现了代码高亮，但是它寻在一些局限性，某些情况下无法高亮，而且界面也比较丑，所以最后还是选择了<a href="https://highlightjs.org/" target="_blank" rel="noopener">highlight.js</a>这个库。这个库的使用也很简单，具体步骤如下：</p>
+</code></pre><h3 id="5-4-设置代码高亮、行号"><a href="#5-4-设置代码高亮、行号" class="headerlink" title="5.4 设置代码高亮、行号"></a>5.4 设置代码高亮、行号</h3><p><strong>代码高亮</strong><br>&emsp;&emsp;完成了基本中能之后，可以正式开始写博客了，可是在写的过程中又发现了新问题：博客内的代码没有高亮。为了解决这个问题，在网上查了一些资料，hexo默认已经实现了代码高亮，但是它存在一些局限性，某些情况下无法高亮，而且界面也比较丑，所以最后还是选择了 <a href="https://highlightjs.org/" target="_blank" rel="noopener">highlight.js</a> 这个库。这个库的使用也很简单，具体步骤如下：</p>
 <ul>
-<li>我们上面介绍了hexo自带高亮，所以需要先关闭自带高亮，在全局配置文件_config.yml中将highlight的enable字段设置为false，需要<code>hexo clean</code>后才能生效。</li>
+<li>我们上面介绍了hexo自带高亮，所以需要先关闭自带高亮，在全局配置文件_config.yml中将highlight的enable字段设置为false。</li>
 <li>接着要引入<code>highlight.js</code>的<code>css</code>和<code>js</code>，具体的引入位置在主题模版中的<code>&lt;head&gt;&lt;/head&gt;</code>之间，我使用的<code>Anodyne</code>风格写在了主题的<code>layout</code>文件夹中的<code>layout.ejs</code>文件内，具体代码如下：<pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css&quot;&gt;
 &lt;script src=&quot;//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>在<code>highlight.js</code>官方文档可以看到，它有很多代码风格，我们可以根据自己的喜好来选择，因为平时经常看<code>github</code>的代码，所以我这边选择的是<code>github</code>风格。</li>
 <li>最后，还要对<code>highlight</code>进行初始化，位置在<code>&lt;/body&gt;</code>之前的<code>&lt;script&gt;&lt;/script&gt;</code>中引入，代码如下：<pre><code>hljs.initHighlightingOnLoad();
 </code></pre></li>
 </ul>
-<p>上述步骤的具体代码截图如下图所示：<br><img src="/2018/05/21/build-blog/build-blog/highlight.png" alt="图hightlight"><br><strong>添加代码行号</strong><br>处理完代码高亮之后，很自然的想让插入的代码带有行号，所以我们接下来就介绍一下怎样添加代码行号。这边我们使用库<a href="https://github.com/wcoder/highlightjs-line-numbers.js/" target="_blank" rel="noopener">highlightjs-line-numbers.js</a>，具体步骤如下：</p>
+<p>&emsp;&emsp;上述步骤的具体代码截图如下图所示：</p>
+<p><img src="/2018/05/21/build-blog/build-blog/highlight.png" alt="图hightlight"></p>
+<p><strong>添加代码行号</strong><br>&emsp;&emsp;处理完代码高亮之后，很自然的想让插入的代码带有行号，所以我们接下来就介绍一下怎样添加代码行号。这边我们使用库 <a href="https://github.com/wcoder/highlightjs-line-numbers.js/" target="_blank" rel="noopener">highlightjs-line-numbers.js</a> ，具体步骤如下：</p>
 <ul>
-<li>首先是引入库，这里有两种方式：<br>第一种是，执行命令<code>npm install highlightjs-line-numbers.js</code><br>第二种是，通过script的方式引入，<code>&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.3.0/highlightjs-line-numbers.min.js&quot;&gt;&lt;/script&gt;</code>。其实比较规范的操作应该是通过<code>npm install</code>的方式来引入，这样作者有更新，我们可以拉到最新代码，但是这里我为了跟<code>highlight</code>保持一致，使用了第二种方式。</li>
+<li>首先是引入库，这里有两种方式：<br>第一种是，执行命令 <code>$ npm install highlightjs-line-numbers.js</code><br>第二种是，通过script的方式引入，<code>&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.3.0/highlightjs-line-numbers.min.js&quot;&gt;&lt;/script&gt;</code>。<br>其实比较规范的操作应该是通过<code>npm install</code>的方式来引入，这样作者有更新，我们可以拉到最新代码，但是这里我为了跟<code>highlight</code>保持一致，使用了第二种方式。</li>
 <li>在<code>highlight</code>之后对行号插件进行初始化，代码为：<pre><code>hljs.initLineNumbersOnLoad();
 </code></pre></li>
 </ul>
-<p>上述步骤以及<code>highlight</code>的具体代码截图如下图所示：<br><img src="/2018/05/21/build-blog/build-blog/line.png" alt="图hightlight"><br>如果行号的样式我们不喜欢，可以通过更改CSS的方式来改变，这边仍然以<code>Anodyne</code>风格为例，我在<code>anodyne/source/css/partial/_highlight</code>文件中加入了如下代码：</p>
+<p>&emsp;&emsp;上述步骤以及<code>highlight</code>的具体代码截图如下图所示：</p>
+<p><img src="/2018/05/21/build-blog/build-blog/line.png" alt="图hightlight"></p>
+<p>如果行号的样式我们不喜欢，可以通过更改CSS的方式来改变，这边仍然以<code>Anodyne</code>风格为例，我在<code>anodyne/source/css/partial/_highlight</code>文件中加入了如下代码：</p>
 <pre><code>td.hljs-ln-numbers
   -webkit-touch-callout: none
   -webkit-user-select: none
@@ -240,8 +248,7 @@ td.hljs-ln-code
   padding-left: 10px
 .content table tr:not(:last-child) td
   border-bottom: 0px solid #eee
-</code></pre><p>注意这边要是<code>styl</code>的格式来编写代码，可是<code>.styl</code>貌似不支持高亮，尴尬的很啊，这个有待进一步学习。</p>
-<p>以上，就是我们创建博客的一些基本功能的介绍，接下来我还会在博客中加入用户量统计以及评论框，敬请期待。</p>
+</code></pre><p>&emsp;&emsp;注意这边要是<code>styl</code>的格式来编写代码，可是<code>.styl</code>貌似不支持高亮，好尴尬啊，这个有待进一步学习。<br>&emsp;&emsp;另外，还有一个小功能，就是如何将文字缩进，这边我常用的方法就是输入两个 <code>&amp;emsp;</code> 或者 <code>&amp;ensp;</code> 。<br>&emsp;&emsp;以上，就是我们创建博客的一些基本功能的介绍，接下来我还会在博客中加入用户量统计、评论框、插入表情等功能，敬请期待。</p>
 
                     
                     <!-- Tags Bottom -->
