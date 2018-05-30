@@ -10,10 +10,10 @@
 
     <!--Description-->
     
-        <meta name="description" content="经过之前的三篇文章介绍，AST的CRUD都已经完成。下面主要通过vue转小程序过程中需要用到的部分关键技术来实战。
+        <meta name="description" content="&amp;emsp;&amp;emsp;经过之前的三篇文章介绍，AST的CRUD都已经完成。下面主要通过vue转小程序过程中需要用到的部分关键技术来实战。
 下面的例子的核心代码依然是最简单的一个vue示例
 const babylon = require(&amp;#39;babylon&amp;#39;)
-const t = require(&amp;#39;@">
+const t = re">
     
 
     <!--Author-->
@@ -148,7 +148,7 @@ const t = require(&amp;#39;@">
                     
 
                     <!-- Main Post Content -->
-                    <p>经过之前的三篇文章介绍，<code>AST</code>的<code>CRUD</code>都已经完成。下面主要通过<code>vue</code>转小程序过程中需要用到的部分关键技术来实战。</p>
+                    <p>&emsp;&emsp;经过之前的<a href="https://summerrouxin.github.io/archives/" target="_blank" rel="noopener">三篇</a>文章介绍，<code>AST</code>的<code>CRUD</code>都已经完成。下面主要通过<code>vue</code>转<code>小程序</code>过程中需要用到的部分关键技术来实战。</p>
 <p>下面的例子的核心代码依然是最简单的一个<code>vue</code>示例</p>
 <pre><code>const babylon = require(&#39;babylon&#39;)
 const t = require(&#39;@babel/types&#39;)
@@ -178,7 +178,7 @@ const ast = babylon.parse(code, {
   sourceType: &#39;module&#39;,
   plugins: [&#39;flow&#39;]
 })
-</code></pre><p>经过本文中的一些操作，我们将获得最终的小程序代码如下：</p>
+</code></pre><p>&emsp;&emsp;经过本文中的一些操作，我们将获得最终的小程序代码如下：</p>
 <pre><code>Page({
   data: (() =&gt; {
     const obj = {}
@@ -199,19 +199,19 @@ const ast = babylon.parse(code, {
     })
   }
 })
-</code></pre><p>注意，跟我们之前介绍的一致，为了完成上述转换，要把输入和输出均放入AST explorer，查看其先后的结构对比。</p>
-<h2 id="vue代码转小程序"><a href="#vue代码转小程序" class="headerlink" title="vue代码转小程序"></a><code>vue</code>代码转小程序</h2><p>看开始展示的两份代码，为了实现转换，我们需要以下步骤：</p>
+</code></pre><p>&emsp;&emsp;<strong>注意:</strong>，跟我们之前介绍的一致，为了完成上述转换，要把输入和输出均放入AST explorer，查看其先后的结构对比。</p>
+<h2 id="vue代码转小程序"><a href="#vue代码转小程序" class="headerlink" title="vue代码转小程序"></a><code>vue</code>代码转小程序</h2><p>&emsp;&emsp;对比文章一开始展示的两份代码，为了实现转换，我们需要以下步骤：</p>
 <ol>
 <li>将<code>data</code>函数转<code>data</code>属性，然后删除<code>data</code>函数</li>
 <li>将<code>methods</code>里的属性提取出来，放到和<code>data</code>同一层级中，<code>methods</code>也要删除</li>
 <li>将所有的<code>this.[data member]</code>转换为<code>this.data.[data member]</code>。注意这里只转<code>data</code>中的属性</li>
 <li>在变更<code>this.data</code>的下面，插入<code>this.setData</code>来触发数据变更</li>
 </ol>
-<p>下面将按照这一步骤，一步一步完成转换，我觉得看到每一步的代码变化还是很有成就感滴。</p>
-<h3 id="生成data属性"><a href="#生成data属性" class="headerlink" title="生成data属性"></a>生成<code>data</code>属性</h3><p>这一步，我们要先提取原<code>data</code>函数中的<code>return</code>的对象。结合AST explorer，可以很方便的找到这一路径。</p>
+<p>&emsp;&emsp;下面将按照这一步骤，一步一步完成转换，我觉得看到每一步的代码变化还是很有成就感滴。</p>
+<h3 id="生成data属性"><a href="#生成data属性" class="headerlink" title="生成data属性"></a>生成<code>data</code>属性</h3><p>&emsp;&emsp;这一步，我们要先提取原<code>data</code>函数中的<code>return</code>的对象。结合AST explorer，可以很方便的找到这一路径。</p>
 <pre><code>const dataObject = ast.program.body[0].declaration.properties[0].body.body[0].argument
 console.log(dataObject)
-</code></pre><p>但是，这段代码的可读性和鲁棒性基本是0。它强依赖我们书写的<code>data</code>函数是第一个属性。因此，这里我们将主要使用<code>traverse</code>来访问节点：</p>
+</code></pre><p>&emsp;&emsp;可是这段代码的可读性和鲁棒性基本是0啊。它强依赖我们书写的<code>data</code>函数是第一个属性。所以这里我们还是主要使用<code>traverse</code>来访问节点：</p>
 <pre><code>traverse(ast, {
   ObjectMethod(path) {
     if (path.node.key.name === &#39;data&#39;) {
@@ -259,7 +259,7 @@ console.log(generate(ast, {}, code).code)
 
   }
 };
-</code></pre><h3 id="将methods中的属性提升一级"><a href="#将methods中的属性提升一级" class="headerlink" title="将methods中的属性提升一级"></a>将<code>methods</code>中的属性提升一级</h3><p>这里遍历<code>methods</code>中的属性没有再采用<code>traverse</code>，因为这里结构是固定的。</p>
+</code></pre><h3 id="将methods中的属性提升一级"><a href="#将methods中的属性提升一级" class="headerlink" title="将methods中的属性提升一级"></a>将<code>methods</code>中的属性提升一级</h3><p>&emsp;&emsp;这里遍历<code>methods</code>中的属性没有再采用<code>traverse</code>，因为这里结构是固定的。</p>
 <pre><code>traverse(ast, {
   ObjectProperty(path) {
     if (path.node.key.name === &#39;methods&#39;) {
@@ -290,15 +290,15 @@ console.log(generate(ast, {}, code).code)
   }
 
 };
-</code></pre><h3 id="this-member转this-data-member"><a href="#this-member转this-data-member" class="headerlink" title="this.member转this.data.member"></a><code>this.member</code>转<code>this.data.member</code></h3><p>这一步，首先要从<code>data</code>属性中提取数据属性。这个有些依赖<code>data</code>中的函数到底写成怎么样，如果写成：</p>
+</code></pre><h3 id="this-member转为this-data-member"><a href="#this-member转为this-data-member" class="headerlink" title="this.member转为this.data.member"></a><code>this.member</code>转为<code>this.data.member</code></h3><p>&emsp;&emsp;这一步，首先要从<code>data</code>属性中提取数据属性。这个有些依赖<code>data</code>中的函数到底写成怎么样，如果写成：</p>
 <pre><code>  data: (() =&gt; {
     const obj = {}
     obj.message = &#39;hello vue&#39;
     obj.count = 0
     return obj
   })(),
-</code></pre><p>这将不符合我们这里的转化方法。当然我们可以通过求值来获取最终的对象，但这里也有缺陷。另一个思路是遍历其他成员函数，使用排除法。</p>
-<p>总之，我们需要一个方法来获取<code>this.data</code>中的属性。本文将继续以代码中的例子，通过<code>data</code>中的<code>return</code>方法来获取。</p>
+</code></pre><p>&emsp;&emsp;这将不符合我们这里的转化方法。当然我们可以通过求值来获取最终的对象，但这里也有缺陷。另一个思路是遍历其他成员函数，使用排除法。</p>
+<p>&emsp;&emsp;总之，我们需要一个方法来获取<code>this.data</code>中的属性。本文将继续以代码中的例子，通过<code>data</code>中的<code>return</code>方法来获取。</p>
 <pre><code>// 获取`this.data`中的属性
 const datas = []
 traverse(ast, {
@@ -322,7 +322,7 @@ traverse(ast, {
 console.log(datas)
 </code></pre><p>程序输出：</p>
 <pre><code>[ &#39;message&#39;, &#39;count&#39; ]
-</code></pre><p>修改数据属性至<code>this.data.</code></p>
+</code></pre><p>&emsp;&emsp;修改数据属性至<code>this.data.</code></p>
 <pre><code>traverse(ast, {
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
@@ -348,7 +348,7 @@ console.log(datas)
   }
 
 };
-</code></pre><h3 id="添加this-setState方法"><a href="#添加this-setState方法" class="headerlink" title="添加this.setState方法"></a>添加<code>this.setState</code>方法</h3><p>要想在变更<code>this.data</code>的下面，插入<code>this.setData</code>，我们首先要找到它插入的位置，即<code>this.data</code>的父节点，所以这就是我们的第一步操作：(MemberExpression就是上一步的，因为这一步的path与上一步相同)</p>
+</code></pre><h3 id="添加this-setState方法"><a href="#添加this-setState方法" class="headerlink" title="添加this.setState方法"></a>添加<code>this.setState</code>方法</h3><p>&emsp;&emsp;要想在变更<code>this.data</code>的下面，插入<code>this.setData</code>，我们首先要找到它插入的位置，即<code>this.data</code>的父节点，所以这就是我们的第一步操作：(<code>MemberExpression</code>就是上一步的，因为这一步的path与上一步相同)</p>
 <pre><code>traverse(ast, {
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
@@ -359,7 +359,7 @@ console.log(datas)
     parent.isExpressionStatement()
   )
 })
-</code></pre><p>找到插入的位置后，我们就要构造要插入的函数，这时就用到了我们在这个系列第一篇文章中介绍的<code>Create</code>操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST explorerh和<code>babel-types</code>的<code>API</code>，然后找到从外向内一层一层的对照，这边我们就不详细介绍了，因为再详细我也不造该咋介绍。</p>
+</code></pre><p>&emsp;&emsp;找到插入的位置后，我们就要构造要插入的函数，这时就用到了我们在这个系列第一篇文章中介绍的(<code>Create</code>)[<a href="https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/]操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST" target="_blank" rel="noopener">https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/]操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST</a> explorerh和<code>babel-types</code>的<code>API</code>，然后找到从外向内一层一层的对照，这边我们就不详细介绍了，因为再详细我也不造该咋介绍。</p>
 <pre><code>traverse(ast, {
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
