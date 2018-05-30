@@ -10,8 +10,7 @@
 
     <!--Description-->
     
-        <meta name="description" content="Update操作通常配合Create来完成。以下介绍几个常用的NodePath`API：replace、insert、remove`。具体也可以看babel-handbook中的Manipulation章节。
-replaceWith 使用新的节点进行替换将加法运算替换成乘法const code = ">
+        <meta name="description" content="&amp;emsp;&amp;emsp;通过前两篇文章的介绍，大家已经了解了Create和Retrieve，我们接着介绍Update和 Remove操作。Update操作通常配合Create来完成。我们这篇文章主要介绍几个常用的NodePath`API：replace、insert、remove`。具体也可以看ba">
     
 
     <!--Author-->
@@ -146,7 +145,7 @@ replaceWith 使用新的节点进行替换将加法运算替换成乘法const co
                     
 
                     <!-- Main Post Content -->
-                    <p><code>Update</code>操作通常配合<code>Create</code>来完成。以下介绍几个常用的<code>NodePath`</code>API<code>：</code>replace<code>、</code>insert<code>、</code>remove`。具体也可以看babel-handbook中的Manipulation章节。</p>
+                    <p>&emsp;&emsp;通过<a href="https://summerrouxin.github.io/archives/" target="_blank" rel="noopener">前两篇</a>文章的介绍，大家已经了解了<code>Create</code>和<code>Retrieve</code>，我们接着介绍<code>Update</code>和 <code>Remove</code>操作。<code>Update</code>操作通常配合<code>Create</code>来完成。我们这篇文章主要介绍几个常用的<code>NodePath`</code>API<code>：</code>replace<code>、</code>insert<code>、</code>remove`。具体也可以看babel-handbook中的<a href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-manipulation" target="_blank" rel="noopener">Manipulation章节</a>。</p>
 <h2 id="replaceWith-使用新的节点进行替换"><a href="#replaceWith-使用新的节点进行替换" class="headerlink" title="replaceWith 使用新的节点进行替换"></a>replaceWith 使用新的节点进行替换</h2><h3 id="将加法运算替换成乘法"><a href="#将加法运算替换成乘法" class="headerlink" title="将加法运算替换成乘法"></a>将加法运算替换成乘法</h3><pre><code>const code = `const c = a + b`
 const ast = babylon.parse(code)
 
@@ -161,9 +160,9 @@ traverse(ast, {
 })
 
 console.log(generate(ast, {}, code).code) // const c = a * b;
-</code></pre><h3 id="将this-count替换为this-data-count"><a href="#将this-count替换为this-data-count" class="headerlink" title="将this.count替换为this.data.count"></a>将<code>this.count</code>替换为<code>this.data.count</code></h3><p>转换前后的<code>AST</code>展示如下图：</p>
+</code></pre><h3 id="将this-count替换为this-data-count"><a href="#将this-count替换为this-data-count" class="headerlink" title="将this.count替换为this.data.count"></a>将<code>this.count</code>替换为<code>this.data.count</code></h3><p>&emsp;&emsp;转换前后的<code>AST</code>展示如下图：</p>
 <p><img src="/2018/05/28/ast-update-remove/Javasrcipt-Babylon-AST-update-remove/count.jpeg" alt="图this.count"></p>
-<p>我们需要做的是，找到符合<code>this.count</code>的<code>ThisExpression</code>，然后把它替换为<code>this.data</code></p>
+<p>&emsp;&emsp;我们需要做的是，找到符合<code>this.count</code>的<code>ThisExpression</code>，然后把它替换为<code>this.data</code></p>
 <pre><code>const code = `this.count`
 const ast = babylon.parse(code)
 
@@ -184,10 +183,10 @@ traverse(ast, {
   }
 })
 console.log(generate(ast, {}, code).code) // this.data.count;
-</code></pre><h2 id="replaceWithSourceString-直接使用代码替换"><a href="#replaceWithSourceString-直接使用代码替换" class="headerlink" title="replaceWithSourceString 直接使用代码替换"></a>replaceWithSourceString 直接使用代码替换</h2><p>上个例子中将<code>this.count</code>替换为<code>this.data.count</code>的部分，通过<code>t.memberExpression</code>可以构造<code>node</code>。简单起见，也可以直接使用<code>replaceWithSourceString</code>，个人局的这个<code>API</code>很好用。</p>
+</code></pre><h2 id="replaceWithSourceString-直接使用代码替换"><a href="#replaceWithSourceString-直接使用代码替换" class="headerlink" title="replaceWithSourceString 直接使用代码替换"></a>replaceWithSourceString 直接使用代码替换</h2><p>&emsp;&emsp;上个例子中将<code>this.count</code>替换为<code>this.data.count</code>的部分，通过<code>t.memberExpression</code>可以构造<code>node</code>。更简单的操作可以直接使用<code>replaceWithSourceString</code>，个人觉得这个<code>API</code>很好用。</p>
 <pre><code>path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
-</code></pre><h2 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h2><p>插入是树操作的一种常见操作。子节点是个<code>Array</code>，前、中、后各种位置都可以插入新节点。下面介绍<code>pushContainer</code>、<code>unshiftContainer</code>、<code>insertBefore</code>、<code>insertAfter</code>操作。</p>
-<p>以给<code>obj</code>对象新增一个属性<code>myprop: &#39;hello my property&#39;</code>为例：</p>
+</code></pre><h2 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h2><p>&emsp;&emsp;插入是树操作的一种常见操作。子节点是个<code>Array</code>，前、中、后各种位置都可以插入新节点。下面来介绍下<code>pushContainer</code>、<code>unshiftContainer</code>、<code>insertBefore</code>、<code>insertAfter</code>操作。</p>
+<p>&emsp;&emsp;这里以给<code>obj</code>对象新增一个属性<code>myprop: &#39;hello my property&#39;</code>为例：</p>
 <pre><code>const code = `
 const obj = {
   count: 0,
@@ -200,13 +199,13 @@ const property = t.objectProperty(
   t.identifier(&#39;myprop&#39;),
   t.stringLiteral(&#39;hello my property&#39;)
 )
-</code></pre><h3 id="pushContainer-父节点的操作"><a href="#pushContainer-父节点的操作" class="headerlink" title="pushContainer 父节点的操作"></a>pushContainer 父节点的操作</h3><p>父节点为子节点<code>Array</code>插入一个<code>node</code></p>
+</code></pre><h3 id="pushContainer-父节点的操作"><a href="#pushContainer-父节点的操作" class="headerlink" title="pushContainer 父节点的操作"></a>pushContainer 父节点的操作</h3><p>&emsp;&emsp;父节点为子节点<code>Array</code>插入一个<code>node</code></p>
 <pre><code>traverse(ast, {
   ObjectExpression(path) {
     path.pushContainer(&#39;properties&#39;, property)
   }
 })
-</code></pre><h3 id="insertAfter-兄弟节点的操作"><a href="#insertAfter-兄弟节点的操作" class="headerlink" title="insertAfter 兄弟节点的操作"></a>insertAfter 兄弟节点的操作</h3><p><code>insertAfter</code>也可以完成上述操作，需要找到<code>message</code>属性，然后在后面插入<code>node</code>就搞定啦</p>
+</code></pre><h3 id="insertAfter-兄弟节点的操作"><a href="#insertAfter-兄弟节点的操作" class="headerlink" title="insertAfter 兄弟节点的操作"></a>insertAfter 兄弟节点的操作</h3><p>&emsp;&emsp;<code>insertAfter</code>也可以完成上述操作，需要找到<code>message</code>属性，然后在后面插入<code>node</code>就搞定啦</p>
 <pre><code>traverse(ast, {
   ObjectProperty(path) {
     if (
@@ -218,15 +217,15 @@ const property = t.objectProperty(
     }
   }
 })
-</code></pre><p><code>unshiftContainer</code>和<code>insertBefore</code>与上面两个相对应，这里不再举例了，大家可以自己试试。</p>
-<p>因为<code>properties</code>是个数组，因此，我们可以直接使用数组操作</p>
+</code></pre><p>&emsp;&emsp;<code>unshiftContainer</code>和<code>insertBefore</code>与上面两个相对应，这里不再举例了，大家可以自己试一试。</p>
+<p>&emsp;&emsp;因为<code>properties</code>是个数组，因此，我们可以直接使用数组操作</p>
 <pre><code>traverse(ast, {
   ObjectExpression(path) {
     // path.pushContainer(&#39;properties&#39;, property)
     path.node.properties.push(property)
   }
 })
-</code></pre><h2 id="Remove-自我毁灭"><a href="#Remove-自我毁灭" class="headerlink" title="Remove 自我毁灭"></a>Remove 自我毁灭</h2><p><code>Remove</code>方法极为简单，找到要删除的<code>NodePath</code>，执行<code>Remove</code>就结束了。如上述代码，我们要删除<code>message</code>属性：</p>
+</code></pre><h2 id="Remove-自我毁灭"><a href="#Remove-自我毁灭" class="headerlink" title="Remove 自我毁灭"></a>Remove 自我毁灭</h2><p>&emsp;&emsp;<code>Remove</code>方法极为简单，找到要删除的<code>NodePath</code>，执行<code>Remove</code>就结束了。如上述代码，我们要删除<code>message</code>属性，代码如下：</p>
 <pre><code>traverse(ast, {
   ObjectProperty(path) {
     if (
@@ -238,7 +237,7 @@ const property = t.objectProperty(
     }
   }
 })
-</code></pre><p>到目前位置，AST的CURD我们都介绍完了，下面一篇文章以<code>vue</code>转<code>小程序</code>为例，我们来实战一番。</p>
+</code></pre><p>到目前为止，AST的CURD我们都介绍完了，下面一篇文章以<code>vue</code>转<code>小程序</code>为例，我们来实战一波。</p>
 
                     
                     <!-- Tags Bottom -->
