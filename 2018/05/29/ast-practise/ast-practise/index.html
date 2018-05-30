@@ -364,22 +364,25 @@ console.log(datas)
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
       path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
-    }
-  }
-  const expressionStatement = path.findParent((parent) =&gt;   
-    parent.isExpressionStatement()
-  )
-  if(expressionStatement) {
-    const finalExpStatement =
-      t.expressionStatement(
-        t.callExpression(
-          t.memberExpression(t.thisExpression(), t.identifier(&#39;setData&#39;)),
-          [t.objectExpression([t.objectProperty(
-            t.identifier(propertyName), t.identifier(`this.data.${propertyName}`)
-          )])]
-        )
+
+      // findParent
+      const expressionStatement = path.findParent((parent) =&gt;   
+        parent.isExpressionStatement()
       )
-    expressionStatement.insertAfter(finalExpStatement)
+      // create
+      if(expressionStatement) {
+        const finalExpStatement =
+          t.expressionStatement(
+            t.callExpression(
+              t.memberExpression(t.thisExpression(), t.identifier(&#39;setData&#39;)),
+              [t.objectExpression([t.objectProperty(
+                t.identifier(propertyName), t.identifier(`this.data.${propertyName}`)
+              )])]
+            )
+          )
+        expressionStatement.insertAfter(finalExpStatement)
+      }
+    }
   }
 })
 </code></pre><p>程序输出：</p>
