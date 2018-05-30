@@ -10,10 +10,7 @@
 
     <!--Description-->
     
-        <meta name="description" content="针对语法树节点的查询(Retrieve)操作通常伴随着Update和Remove(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和traverse。  
-本文所有对AST的操作均基于以下这一段代码
-const babylon = require(&amp;#39;babylon&amp;#39;)
-const">
+        <meta name="description" content="&amp;emsp;&amp;emsp;在上一篇文章中，我们介绍了AST的Create。在这篇文章中，我们接着来介绍AST的Retrieve。&amp;emsp;&amp;emsp;针对语法树节点的查询(Retrieve)操作通常伴随着Update和Remove(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和travers">
     
 
     <!--Author-->
@@ -148,8 +145,8 @@ const">
                     
 
                     <!-- Main Post Content -->
-                    <p>针对语法树节点的查询(<code>Retrieve</code>)操作通常伴随着<code>Update</code>和<code>Remove</code>(这两种方法见下一篇文章)。这里介绍两种方式：直接访问和<code>traverse</code>。  </p>
-<p>本文所有对<code>AST</code>的操作均基于以下这一段代码</p>
+                    <p>&emsp;&emsp;在<a href="https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/" target="_blank" rel="noopener">上一篇</a>文章中，我们介绍了<code>AST</code>的<code>Create</code>。在这篇文章中，我们接着来介绍<code>AST</code>的<code>Retrieve</code>。<br>&emsp;&emsp;针对语法树节点的查询(<code>Retrieve</code>)操作通常伴随着<code>Update</code>和<code>Remove</code>(这两种方法见<a href="https://summerrouxin.github.io/2018/05/28/ast-update-remove/Javasrcipt-Babylon-AST-update-remove/" target="_blank" rel="noopener">下一篇</a>文章)。这里介绍两种方式：直接访问和<code>traverse</code>。  </p>
+<p>&emsp;&emsp;本文中所有对<code>AST</code>的操作均基于以下这一段代码</p>
 <pre><code>const babylon = require(&#39;babylon&#39;)
 const t = require(&#39;@babel/types&#39;)
 const generate = require(&#39;@babel/generator&#39;).default
@@ -178,8 +175,9 @@ const ast = babylon.parse(code, {
   sourceType: &#39;module&#39;,
   plugins: [&#39;flow&#39;]
 })
-</code></pre><p>对应的AST explorer的表示如下图：<br><img src="/2018/05/23/ast-retrieve/Javascript-Babylon-AST-retrieve/retrievemain.png" alt="图"></p>
-<h2 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h2><p>如上图中，有很多节点<code>Node</code>，如需要获取<code>ExportDefaultDeclaration</code>下的<code>data</code>函数，直接访问的方式如下：</p>
+</code></pre><p>&emsp;&emsp;对应的AST explorer的表示如下图所示，大家可以自行拷贝过去查看：</p>
+<p><img src="/2018/05/23/ast-retrieve/Javascript-Babylon-AST-retrieve/retrievemain.png" alt="图"></p>
+<h2 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h2><p>&emsp;&emsp;如上图中，有很多节点<code>Node</code>，如需要获取<code>ExportDefaultDeclaration</code>下的<code>data</code>函数，直接访问的方式如下：</p>
 <pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
 console.log(dataProperty)
 </code></pre><p>程序输出：</p>
@@ -215,8 +213,8 @@ console.log(dataProperty)
      loc: SourceLocation { start: [Object], end: [Object] },
      body: [ [Object] ],
      directives: [] } }
-</code></pre><p>这种直接访问的方式可以用于固定程序结构下的节点访问，当然也可以使用<strong>遍历</strong>树的方式来访问每个<code>Node</code>。</p>
-<p>这里插播一个<code>Update</code>操作，把<code>data</code>函数修改为<code>mydata</code>：</p>
+</code></pre><p>&emsp;&emsp;这种直接访问的方式可以用于固定程序结构下的节点访问，当然也可以使用<strong>遍历</strong>树的方式来访问每个<code>Node</code>。</p>
+<p>&emsp;&emsp;这里插播一个<code>Update</code>操作，把<code>data</code>函数修改为<code>mydata</code>：</p>
 <pre><code>const dataProperty = ast.program.body[0].declaration.properties[0]
 dataProperty.key.name = &#39;mydata&#39;
 
@@ -242,12 +240,12 @@ console.log(output.code)
 
   }
 };
-</code></pre><h2 id="使用Traverse访问"><a href="#使用Traverse访问" class="headerlink" title="使用Traverse访问"></a>使用Traverse访问</h2><p>使用直接访问<code>Node</code>的方式，在简单场景下比较好用。可是对于一些复杂场景，存在以下问题：  </p>
+</code></pre><h2 id="使用Traverse访问"><a href="#使用Traverse访问" class="headerlink" title="使用Traverse访问"></a>使用Traverse访问</h2><p>&emsp;&emsp;使用直接访问<code>Node</code>的方式，在简单场景下比较好用。可是对于一些复杂场景，存在以下几个问题：  </p>
 <ol>
 <li>需要处理某一类型的<code>Node</code>，比如<code>ThisExpression</code>、<code>ArrowFunctionExpression</code>等，这时候我们可能需要多次遍历<code>AST</code>才能完成操作    </li>
 <li>到达特定<code>Node</code>后，要访问他的<code>parent</code>、<code>sibling</code>时，不方便，但是这个也很常用</li>
 </ol>
-<p><code>@babel/traverse</code>库可以很好的解决这一问题。<code>traverse</code>的基本用法如下：</p>
+<p>&emsp;&emsp;<code>@babel/traverse</code>库可以很好的解决这一问题。<code>traverse</code>的基本用法如下：</p>
 <pre><code>// 该代码打印所有 node.type。 可以使用`path.type`，可以使用`path.node.type`
 let space = 0
 
@@ -295,9 +293,9 @@ traverse(ast, {
                    &gt; MemberExpression
                      &gt; ThisExpression
                      &gt; Identifier
-</code></pre><p><code>traverse</code>引入了一个<code>NodePath</code>的概念，通过<code>NodePath</code>的<code>API</code>可以方便的访问父子、兄弟节点。</p>
-<p><strong>注意</strong> 上述代码打印出的<code>node.type</code>和AST explorer中的<code>type</code>并不完全一致。实际在使用<code>traverse</code>时，需要以上述打印出的<code>node.type</code>为准。如<code>data</code>函数，在AST explorer中的<code>type</code>为<code>Property</code>，但其实际的<code>type</code>为<code>ObjectMethod</code>。这个大家一定要注意，因为在我们后面的实际代码中也有用到。</p>
-<p>仍以上述访问<code>data</code>函数为例，<code>traverse</code>的写法如下：</p>
+</code></pre><p>&emsp;&emsp;<code>traverse</code>引入了一个<code>NodePath</code>的概念，通过<code>NodePath</code>的<code>API</code>可以方便的访问父子、兄弟节点。</p>
+<p>&emsp;&emsp;<strong>注意：</strong> 上述代码打印出的<code>node.type</code>和AST explorer中的<code>type</code>并不完全一致。实际在使用<code>traverse</code>时，需要以上述打印出的<code>node.type</code>为准。如<code>data</code>函数，在AST explorer中的<code>type</code>为<code>Property</code>，但其实际的<code>type</code>为<code>ObjectMethod</code>。这个大家一定要注意哦，因为在我们后面的实际代码中也有用到。</p>
+<p>&emsp;&emsp;仍以上述的访问<code>data</code>函数为例，<code>traverse</code>的写法如下：</p>
 <pre><code>traverse(ast, {
   ObjectMethod(path) {
     // 1
@@ -315,9 +313,9 @@ traverse(ast, {
     }
   }
 })
-</code></pre><p>上面两种判断<code>Node</code>的方法都可以，哪个更好一些，我也没有研究。</p>
-<p>通过<code>travase</code>获取到的是<code>NodePath</code>，<code>NodePath.node</code>等价于直接访问获取的<code>Node</code>节点，可以进行需要的操作。</p>
-<p>以下是一些从<code>babel-handbook</code>中看到的<code>NodePath</code>的<code>API</code>，写的一些测试代码，大家可以参考看下，都是比较常用的：</p>
+</code></pre><p>&emsp;&emsp;上面两种判断<code>Node</code>的方法都可以，哪个更好一些，我也没有研究。</p>
+<p>&emsp;&emsp;通过<code>travase</code>获取到的是<code>NodePath</code>，<code>NodePath.node</code>等价于直接访问获取的<code>Node</code>节点，可以进行需要的操作。</p>
+<p>&emsp;&emsp;以下是一些从<code>babel-handbook</code>中看到的<code>NodePath</code>的<code>API</code>，写的一些测试代码，大家可以参考看下，都是比较常用的：</p>
 <p><strong>parent</strong></p>
 <pre><code>traverse(ast, {
   ObjectMethod(path) {
