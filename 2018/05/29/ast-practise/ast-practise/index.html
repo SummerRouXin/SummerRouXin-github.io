@@ -359,7 +359,12 @@ console.log(datas)
     parent.isExpressionStatement()
   )
 })
-</code></pre><p>&emsp;&emsp;找到插入的位置后，我们就要构造要插入的函数，这时就用到了我们在这个系列第一篇文章中介绍的(<code>Create</code>)[<a href="https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/]操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST" target="_blank" rel="noopener">https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/]操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST</a> explorerh和<code>babel-types</code>的<code>API</code>，然后找到从外向内一层一层的对照，这边我们就不详细介绍了，因为再详细我也不造该咋介绍。</p>
+</code></pre><p>&emsp;&emsp;找到插入的位置后，我们就要构造要插入的函数，这时就用到了我们在这个系列第一篇文章中介绍的(<code>Create</code>)[<a href="https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/]操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST" target="_blank" rel="noopener">https://summerrouxin.github.io/2018/05/22/ast-create/Javascript-Babylon-AST-create/]操作，忘记的可以去复习下哦，下面我们直接上代码，大家看这段代码一定要对照AST</a> explorerh和<code>babel-types</code>的<code>API</code>，然后找到从外向内一层一层的对照。这段代码的逻辑大概如下：</p>
+<ol>
+<li>找到要插入的代码的位置，首先要判断是不是赋值操作，如果是的话找到<code>this.member</code>的父结点</li>
+<li>新建要插入的结点</li>
+<li>插入节点</li>
+</ol>
 <pre><code>traverse(ast, {
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
@@ -414,7 +419,7 @@ console.log(datas)
   }
 
 };
-</code></pre><p>以上就是我们实战介绍，这边只涉及到<code>vue</code>转<code>小程序</code>的部分代码，以后可以考虑继续介绍其他模块。</p>
+</code></pre><p>&emsp;&emsp;以上就是我们实战介绍，这边只涉及到<code>vue</code>转<code>小程序</code>的部分代码，以后可以考虑继续介绍其他模块。</p>
 
                     
                     <!-- Tags Bottom -->
