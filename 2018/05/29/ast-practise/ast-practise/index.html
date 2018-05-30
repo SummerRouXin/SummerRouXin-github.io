@@ -364,23 +364,28 @@ console.log(datas)
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
       path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
-
-      // findParent
-      const expressionStatement = path.findParent((parent) =&gt;   
-        parent.isExpressionStatement()
-      )
-      // create
-      if(expressionStatement) {
-        const finalExpStatement =
-          t.expressionStatement(
-            t.callExpression(
-              t.memberExpression(t.thisExpression(), t.identifier(&#39;setData&#39;)),
-              [t.objectExpression([t.objectProperty(
-                t.identifier(propertyName), t.identifier(`this.data.${propertyName}`)
-              )])]
-            )
+      //一定要判断一下是不是赋值操作
+      if(
+        (t.isAssignmentExpression(path.parentPath) &amp;&amp; path.parentPath.get(&#39;left&#39;) === path) ||
+        t.isUpdateExpression(path.parentPath)
+      ) {
+          // findParent
+          const expressionStatement = path.findParent((parent) =&gt;   
+            parent.isExpressionStatement()
           )
-        expressionStatement.insertAfter(finalExpStatement)
+          // create
+          if(expressionStatement) {
+            const finalExpStatement =
+              t.expressionStatement(
+                t.callExpression(
+                  t.memberExpression(t.thisExpression(), t.identifier(&#39;setData&#39;)),
+                  [t.objectExpression([t.objectProperty(
+                    t.identifier(propertyName), t.identifier(`this.data.${propertyName}`)
+                  )])]
+                )
+              )
+            expressionStatement.insertAfter(finalExpStatement)
+          }  
       }
     }
   }
