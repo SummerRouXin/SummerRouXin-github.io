@@ -181,10 +181,10 @@ const ast = babylon.parse(code, {
 </code></pre><p>&emsp;&emsp;经过本文中的一些操作，我们将获得最终的小程序代码如下：</p>
 <pre><code>Page({
   data: (() =&gt; {
-    const obj = {}
-    obj.message = &#39;hello vue&#39;
-    obj.count = 0
-    return obj
+      return {
+        message: &#39;hello vue&#39;,
+        count: 0
+      }
   })(),
   add() {
     ++this.data.count
