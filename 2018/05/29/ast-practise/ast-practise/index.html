@@ -348,7 +348,7 @@ console.log(datas)
   }
 
 };
-</code></pre><h3 id="添加this-setState方法"><a href="#添加this-setState方法" class="headerlink" title="添加this.setState方法"></a>添加<code>this.setState</code>方法</h3><p>&emsp;&emsp;要想在变更<code>this.data</code>的下面，插入<code>this.setData</code>，我们首先要找到它插入的位置，即<code>this.data</code>的父节点，所以这就是我们的第一步操作：(<code>MemberExpression</code>就是上一步的，因为这一步的path与上一步相同)</p>
+</code></pre><h3 id="添加this-setData方法"><a href="#添加this-setData方法" class="headerlink" title="添加this.setData方法"></a>添加<code>this.setData</code>方法</h3><p>&emsp;&emsp;要想在变更<code>this.data</code>的下面，插入<code>this.setData</code>，我们首先要找到它插入的位置，即<code>this.data</code>的父节点，所以这就是我们的第一步操作：(<code>MemberExpression</code>就是上一步的，因为这一步的path与上一步相同)</p>
 <pre><code>traverse(ast, {
   MemberExpression(path) {
     if (path.node.object.type === &#39;ThisExpression&#39; &amp;&amp; datas.includes(path.node.property.name)) {
