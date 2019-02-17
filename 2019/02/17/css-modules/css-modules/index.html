@@ -10,7 +10,7 @@
 
     <!--Description-->
     
-        <meta name="description" content="&amp;emsp;&amp;emsp;通过前两篇文章的介绍，大家已经了解了Create和Retrieve，我们接着介绍Update和 Remove操作。Update操作通常配合Create来完成。我们这篇文章主要介绍几个常用的NodePath`API：replace、insert、remove`。具体也可以看ba">
+        <meta name="description" content="一、我的问题是什么？&amp;emsp;&amp;emsp;在使用 ant design 的项目中，使用了 Icon 组件的自定义图标，我们把自定义图标的样式放在了 global 中，这样在一个项目里面也不会有问题。但是我们的项目是几个项目组合起来的，就出现了问题：每个项目中都定义了图标的字体，并且都是在 glob">
     
 
     <!--Author-->
@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Babylon-AST初探-代码更新&amp;删除(Update &amp; Remove)"/>
+        <meta property="og:title" content="CSS Modules 作用及实践"/>
     
 
     <!--Open Graph Description-->
@@ -42,7 +42,7 @@
 
     <!-- Title -->
     
-    <title>Babylon-AST初探-代码更新&amp;删除(Update &amp; Remove) - Hexo</title>
+    <title>CSS Modules 作用及实践 - Hexo</title>
 
     <!-- Tachyons Core CSS -->
     <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
@@ -118,8 +118,8 @@
     <!-- Title -->
     <div class="w-100 mw8 center vh-40 dt">
         <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">Babylon-AST初探-代码更新&删除(Update & Remove)</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2018-05-28</p>
+            <h1 class="f1-l f2-m tc tc-m tl-ns">CSS Modules 作用及实践</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-02-17</p>
         </div>
     </div>
 
@@ -139,111 +139,120 @@
                     
                         <div class="tags-container-vertical">
                             <div class="tags-sub-container">
-                                <a class="fw3 ph1 dib" href="/tags/babel-AST/">#babel AST</a>
+                                <a class="fw3 ph1 dib" href="/tags/css/">#css</a>
                             </div>
                         </div>
                     
 
                     <!-- Main Post Content -->
-                    <p>&emsp;&emsp;通过<a href="https://summerrouxin.github.io/archives/" target="_blank" rel="noopener">前两篇</a>文章的介绍，大家已经了解了<code>Create</code>和<code>Retrieve</code>，我们接着介绍<code>Update</code>和 <code>Remove</code>操作。<code>Update</code>操作通常配合<code>Create</code>来完成。我们这篇文章主要介绍几个常用的<code>NodePath`</code>API<code>：</code>replace<code>、</code>insert<code>、</code>remove`。具体也可以看babel-handbook中的<a href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-manipulation" target="_blank" rel="noopener">Manipulation章节</a>。</p>
-<h2 id="replaceWith-使用新的节点进行替换"><a href="#replaceWith-使用新的节点进行替换" class="headerlink" title="replaceWith 使用新的节点进行替换"></a>replaceWith 使用新的节点进行替换</h2><h3 id="将加法运算替换成乘法"><a href="#将加法运算替换成乘法" class="headerlink" title="将加法运算替换成乘法"></a>将加法运算替换成乘法</h3><pre><code>const code = `const c = a + b`
-const ast = babylon.parse(code)
+                    <h3 id="一、我的问题是什么？"><a href="#一、我的问题是什么？" class="headerlink" title="一、我的问题是什么？"></a>一、我的问题是什么？</h3><p>&emsp;&emsp;在使用 <code>ant design</code> 的项目中，使用了 <code>Icon</code> 组件的自定义图标，我们把自定义图标的样式放在了 <code>global</code> 中，这样在一个项目里面也不会有问题。但是我们的项目是几个项目组合起来的，就出现了问题：每个项目中都定义了图标的字体，并且都是在 <code>global</code> 中定义的，这样就出现了字体的相互覆盖，展示出现了问题。</p>
+<p>&emsp;&emsp;针对上述问题，我们给出的解决方案就是使用 <code>CSS</code> 模块化代替 <code>global</code> ，避免全局污染，所以下面介绍一下 <code>CSS</code> 模块化的相关问题。</p>
+<h3 id="二、css-modules-能解决什么问题？"><a href="#二、css-modules-能解决什么问题？" class="headerlink" title="二、css modules 能解决什么问题？"></a>二、<code>css modules</code> 能解决什么问题？</h3><p>1、<code>CSS</code> 作用域问题<br>&emsp;&emsp;<code>CSS</code> 的规则都是全局的，任何一个组件的样式规则，都对整个页面有效。这样就产生了上述规则覆盖的问题，这种问题之前一般通过 <code>!important</code>这种丑陋的方式解决，这种方法不但丑陋并且也不是一个万能的方法，比如上述问题就不能通过这种方法解决。</p>
+<p>2、<code>JS</code> 与<code>CSS</code> 共享变量问题<br>&emsp;&emsp;复杂组件要使用 <code>JS</code> 和 <code>CSS</code> 来共同处理样式，就会造成有些变量在 <code>JS</code> 和 <code>CSS</code> 中冗余，<code>Sass/PostCSS/CSS</code> 等都不提供跨 <code>JS</code> 和 <code>CSS</code> 共享变量这种能力。</p>
+<p>3、组件真正实现模块化的问题<br>&emsp;&emsp;我们平时开发一个可复用组件，<code>CSS</code> 也会在全局起作用，需要复用的组件间也会互相影响，这样开发的就不是一个真正意义上的可独立使用的组件。</p>
+<h3 id="三、项目中的实践"><a href="#三、项目中的实践" class="headerlink" title="三、项目中的实践"></a>三、项目中的实践</h3><p>&emsp;&emsp;既然 <code>CSS</code> 模块化可以解决这么多问题，那么在我们的项目中具体怎么使用呢？<br>下面的介绍基于 <code>react</code> 项目并且 <code>webpack 4.0</code> 进行打包</p>
+<pre><code>module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        loader: &#39;css-loader&#39;,
+        options: {
+          modules: true,
+        },
+      },
+    ],
+  },
+};
+</code></pre><p>&emsp;&emsp;在 <code>webpack</code> 中设置了 <code>modules: true</code> 就表示项目中的 <code>.css</code> 文件启用了 <code>CSS</code> 模块化。<br>然后再业务代码中需要手动引入 <code>css</code> 文件的 <code>class</code> 名：</p>
+<pre><code>import React from &#39;react&#39;;
+import styles from &#39;./index.css&#39;;
 
-traverse(ast, {
-  BinaryExpression(path) {
-    // 注意这里要有判断，否则会无限进入`BinaryExpression`
-    // https://stackoverflow.com/questions/37539432/babel-maximum-call-stack-size-exceeded-while-using-path-replacewith
-    if (path.node.operator === &#39;+&#39;) {
-      path.replaceWith(t.binaryExpression(&#39;*&#39;, path.node.left, path.node.right))
-    }
+export default class Index extends React.Component {
+  render () {
+    return &lt;div className={styles.wrapper}&gt;
+      &lt;div className={styles.btn}&gt;
+        Button
+      &lt;/div&gt;
+    &lt;/div&gt;;
   }
-})
-
-console.log(generate(ast, {}, code).code) // const c = a * b;
-</code></pre><h3 id="将this-count替换为this-data-count"><a href="#将this-count替换为this-data-count" class="headerlink" title="将this.count替换为this.data.count"></a>将<code>this.count</code>替换为<code>this.data.count</code></h3><p>&emsp;&emsp;转换前后的<code>AST</code>展示如下图：</p>
-<p><img src="/2018/05/28/ast-update-remove/Javasrcipt-Babylon-AST-update-remove/count.jpeg" alt="图this.count"></p>
-<p>&emsp;&emsp;我们需要做的是，找到符合<code>this.count</code>的<code>ThisExpression</code>，然后把它替换为<code>this.data</code></p>
-<pre><code>const code = `this.count`
-const ast = babylon.parse(code)
-
-traverse(ast, {
-  MemberExpression(path) {
-    if (
-      t.isThisExpression(path.node.object) &amp;&amp;
-      t.isIdentifier(path.node.property, {
-        name: &#39;count&#39;
-      })
-    ) {
-      path
-        .get(&#39;object&#39;)    // 获取`ThisExpresssion`
-        .replaceWith(
-          t.memberExpression(t.thisExpression(), t.identifier(&#39;data&#39;))
-        )
-    }
-  }
-})
-console.log(generate(ast, {}, code).code) // this.data.count;
-</code></pre><h2 id="replaceWithSourceString-直接使用代码替换"><a href="#replaceWithSourceString-直接使用代码替换" class="headerlink" title="replaceWithSourceString 直接使用代码替换"></a>replaceWithSourceString 直接使用代码替换</h2><p>&emsp;&emsp;上个例子中将<code>this.count</code>替换为<code>this.data.count</code>的部分，通过<code>t.memberExpression</code>可以构造<code>node</code>。更简单的操作可以直接使用<code>replaceWithSourceString</code>，个人觉得这个<code>API</code>很好用。</p>
-<pre><code>path.get(&#39;object&#39;).replaceWithSourceString(&#39;this.data&#39;)
-</code></pre><h2 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h2><p>&emsp;&emsp;插入是树操作的一种常见操作。子节点是个<code>Array</code>，前、中、后各种位置都可以插入新节点。下面来介绍下<code>pushContainer</code>、<code>unshiftContainer</code>、<code>insertBefore</code>、<code>insertAfter</code>操作。</p>
-<p>&emsp;&emsp;这里以给<code>obj</code>对象新增一个属性<code>myprop: &#39;hello my property&#39;</code>为例：</p>
-<pre><code>const code = `
-const obj = {
-  count: 0,
-  message: &#39;hello world&#39;
 }
-`
-const ast = babylon.parse(code)
+</code></pre><p>&emsp;&emsp;渲染出来的组件代码：</p>
+<pre><code>&lt;div class=&quot;-h95cTYFwBAAIlzF-qcc4&quot;&gt;
+  &lt;div class=&quot;_2WlqvlnhuY4sYgg2YppNvQ&quot;&gt;
+    Button
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>&emsp;&emsp;通过我们介绍的 <code>css modules</code>解决了全局污染的问题，但是还是没能解决我之前遇到的问题，这是为什么呢？</p>
+<p>&emsp;&emsp;经过仔细查看发现虽然我们使用了 <code>CSS</code> 模块化，可是每个项目中都使用了一样的产生 <code>hash</code> 值的方法，上面也介绍了我们项目是几个项目组合起来的，所以产生的样式的名字也是一样的，加入A项目中的弹窗在B项目的页面上运行，产生的样式名一样，A的弹窗就使用了 B的样式，就出现了问题，这个问题该怎样解决呢？这边就需要使用<code>css-loader</code>的一个属性<code>localIdentName</code>，该属性用来设置生成的样式名字，为了区分不同项目的样式我们只需在该属性中加入项目名即可，代码如下：</p>
+<pre><code>module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        loader: &#39;css-loader&#39;,
+        options: {
+          modules: true,
+          localIdentName: appName + &#39;__[name]__[local]--[hash:base64:5]&#39;,
+        },
+      },
+    ],
+  },
+};
+</code></pre><p>&emsp;&emsp;也可以通过属性 <code>getLocalIdent</code> 来指定样式名字，具体可参考文档。</p>
+<p>&emsp;&emsp;但是我一直有个疑问样式名字如果设置很长是不是增加 css 文件的大小，带着这个疑问做了一些实验，主要就是看看 <code>uglifyjs-webpack-plugin</code> 插件能不能按照一定规则进行压缩，结论是并没有。 <code>uglifyjs-webpack-plugin</code> 插件内部使用的是<code>cssnano</code>，这边我们使用<code>cssnano-cli</code>进行了测试。</p>
+<p>&emsp;&emsp;我先使用了如下代码进行压缩：</p>
+<pre><code>.main__index__iconStyle--KRCN4 {
+  font-size: 16px;
+}
 
-const property = t.objectProperty(
-  t.identifier(&#39;myprop&#39;),
-  t.stringLiteral(&#39;hello my property&#39;)
-)
-</code></pre><h3 id="pushContainer-父节点的操作"><a href="#pushContainer-父节点的操作" class="headerlink" title="pushContainer 父节点的操作"></a>pushContainer 父节点的操作</h3><p>&emsp;&emsp;父节点为子节点<code>Array</code>插入一个<code>node</code></p>
-<pre><code>traverse(ast, {
-  ObjectExpression(path) {
-    path.pushContainer(&#39;properties&#39;, property)
-  }
-})
-</code></pre><h3 id="insertAfter-兄弟节点的操作"><a href="#insertAfter-兄弟节点的操作" class="headerlink" title="insertAfter 兄弟节点的操作"></a>insertAfter 兄弟节点的操作</h3><p>&emsp;&emsp;<code>insertAfter</code>也可以完成上述操作，需要找到<code>message</code>属性，然后在后面插入<code>node</code>就搞定啦</p>
-<pre><code>traverse(ast, {
-  ObjectProperty(path) {
-    if (
-      t.isIdentifier(path.node.key, {
-        name: &#39;message&#39;
-      })
-    ) {
-      path.insertAfter(property)
-    }
-  }
-})
-</code></pre><p>&emsp;&emsp;<code>unshiftContainer</code>和<code>insertBefore</code>与上面两个相对应，这里不再举例了，大家可以自己试一试。</p>
-<p>&emsp;&emsp;因为<code>properties</code>是个数组，因此，我们可以直接使用数组操作</p>
-<pre><code>traverse(ast, {
-  ObjectExpression(path) {
-    // path.pushContainer(&#39;properties&#39;, property)
-    path.node.properties.push(property)
-  }
-})
-</code></pre><h2 id="Remove-自我毁灭"><a href="#Remove-自我毁灭" class="headerlink" title="Remove 自我毁灭"></a>Remove 自我毁灭</h2><p>&emsp;&emsp;<code>Remove</code>方法极为简单，找到要删除的<code>NodePath</code>，执行<code>Remove</code>就结束了。如上述代码，我们要删除<code>message</code>属性，代码如下：</p>
-<pre><code>traverse(ast, {
-  ObjectProperty(path) {
-    if (
-      t.isIdentifier(path.node.key, {
-        name: &#39;message&#39;
-      })
-    ) {
-      path.remove()
-    }
-  }
-})
-</code></pre><p>到目前为止，AST的<code>CURD</code>我们都介绍完了，下面一篇文章以<code>vue</code>转<code>小程序</code>为例，我们来实战一波。</p>
+.main__icon__iconfont--AHO8L {
+  color: red;
+}
 
+.main__icon__icon-yichang--1cej0 {
+  text-align: center;
+}
+</code></pre><p>&emsp;&emsp;得到的结果为：</p>
+<pre><code>.main__index__iconStyle--KRCN4{font-size:16px}.main__icon__iconfont--AHO8L{color:red}.main__icon__icon-yichang--1cej0{text-align:center}
+</code></pre><p>&emsp;&emsp;然后，我又测试了下面的代码：</p>
+<pre><code>.index__iconStyle--KRCN4 {
+  font-size: 16px;
+}
+
+.icon__iconfont--AHO8L {
+  color: red;
+}
+
+.icon__icon-yichang--1cej0 {
+  text-align: center;
+}
+</code></pre><p>&emsp;&emsp;得到的结果为：</p>
+<pre><code>.index__iconStyle--KRCN4{font-size:16px}.icon__iconfont--AHO8L{color:red}.icon__icon-yichang--1cej0{text-align:center}
+</code></pre><p>&emsp;&emsp;从上面的结果我个人暂时得到的的结论就是，样式名过长会增大 css 文件的大小，但是仍需要再求证一下。</p>
+<h3 id="四、babel-plugin-react-css-modules-插件"><a href="#四、babel-plugin-react-css-modules-插件" class="headerlink" title="四、babel-plugin-react-css-modules 插件"></a>四、<code>babel-plugin-react-css-modules</code> 插件</h3><p>&emsp;&emsp;使用了css modules 后，我们每次都需要写<code>className={styles.xxx}</code>，比较麻烦，<code>babel-plugin-react-css-modules</code>插件可以实现使用<code>styleName</code>属性自动加载<code>CSS</code>模块。我们通过该babel插件来进行语法树解析并最终生成<code>className</code>。具体事例参考<a href="https://github.com/gajus/babel-plugin-react-css-modules" target="_blank" rel="noopener">官方文档</a>。<br>&emsp;&emsp;下面再说下<code>webpack</code>的配置：</p>
+<pre><code>module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        loader: &#39;css-loader&#39;,
+        options: {
+          generateScopedName:appName + &#39;__[name]__[local]--[hash:base64:5]&#39;,  // 要与`localIdentName`命名一致
+          filetypes: {
+              &quot;.less&quot;: &quot;sugerss&quot;
+           },
+        },
+      },
+    ],
+  },
+};
+</code></pre>
                     
                     <!-- Tags Bottom -->
                     
                         <div class="tags-container-bottom">
-                            <i class="fa fa-tag pr3 text-main-color"></i><a class="fw3 ph1 dib" href="/tags/babel-AST/">#babel AST</a>
+                            <i class="fa fa-tag pr3 text-main-color"></i><a class="fw3 ph1 dib" href="/tags/css/">#css</a>
                         </div>
                     
 
@@ -272,18 +281,6 @@ const property = t.objectProperty(
                     <hr class="dn-l mw4 black-50 mt5" />
                     
                     <!-- Widget 2: Categories -->
-                    
-                        <div class="mt5 tc tl-l">
-    <h3>Categories</h3>
-    
-        <p>
-            <a href="/categories/Web前端/">Web前端</a>
-        </p>
-    
-</div>
-
-
-                        <hr class="dn-l mw4 black-50 mt5" />
                     
 
                     <!-- Widget 3: Recent Posts -->
